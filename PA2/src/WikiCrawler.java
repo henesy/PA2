@@ -1,9 +1,7 @@
 /**
- * 
  * @author Tyler Fenton
  * @author Sean Hinchee
  * @author Ryan Radomski
- *
  */
 
 import java.io.*;
