@@ -16,6 +16,7 @@ public class WikiCrawler {
 	public String seedUrl;
 	public int max;
 	public ArrayList<String> topics;
+	public HashSet<String> visited;
 	public String fileName;
 	public int requests;
 	
