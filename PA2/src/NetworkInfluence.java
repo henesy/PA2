@@ -1,11 +1,9 @@
 import java.util.ArrayList;
 
 /**
- * 
  * @author Tyler Fenton
  * @author Sean Hinchee
  * @author Ryan Radomski
- *
  */
 
 public class NetworkInfluence {
