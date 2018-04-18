@@ -28,15 +28,38 @@ public class Util {
 	}
 
 	/**
-	 * Perform one iteration of a search algorithm
+	 * Git subdoc
+	 * 
+	 * @param doc
+	 * @return
 	 */
-	public static <E> void SearchIteration(Set<E> visited, Collection<E> coll, Function<E, Collection<E>> search) {
-		for (E e : coll) {
-			if (!visited.contains(e))
-				for (E ne : search.apply(e))
-					coll.add(ne);
-			visited.add(e);
+	public static String extractSubdoc(String doc) {
+		Pattern pattern = Pattern.compile("<p>(.*?)</p>");
+		Matcher matcher = pattern.matcher(doc);
+		String subdoc = "";
+
+		while (matcher.find()) {
+			subdoc += matcher.group(1);
 		}
+		return subdoc;
+	}
+
+	/**
+	 * 
+	 * @param topics
+	 * @param doc
+	 * @return
+	 */
+	public static boolean hasTopics(Collection<String> topics, String doc) {
+		Pattern pattern;
+		Matcher matcher;
+		for (String topic : topics) {
+			pattern = Pattern.compile(topic);
+			matcher = pattern.matcher(doc);
+			if (!matcher.find())
+				return false;
+		}
+		return true;
 	}
 
 	/**
@@ -47,29 +70,11 @@ public class Util {
 	 *            The page to be ripped
 	 * @return Set of links on the page
 	 */
-	public static List<String> extractLinks(Collection<String> topics, String doc) {
+	public static List<String> extractLinks(String doc) {
 		List<String> links = new ArrayList<>();
-
-		Pattern pattern = Pattern.compile("<p>(.*?)</p>");
-		Matcher matcher = pattern.matcher(doc);
-		String subdoc = null;
-
-		if (!matcher.find()) {
-			return links;
-		}
-
-		matcher.reset();
-		while (matcher.find()) {
-			subdoc += matcher.group(1);
-		}
-
-		// if any topics don't appear, return nothing
-		for (String topic : topics) {
-			pattern = Pattern.compile(topic);
-			matcher = pattern.matcher(subdoc);
-			if (!matcher.find())
-				return links;
-		}
+		Pattern pattern;
+		Matcher matcher;
+		String subdoc = extractSubdoc(doc);
 
 		pattern = Pattern.compile("<a href=\"(.*?)\"");
 		matcher = pattern.matcher(subdoc);
