@@ -17,6 +17,7 @@ public class WikiCrawler {
 	public int max;
 	public ArrayList<String> topics;
 	public String fileName;
+	public int requests;
 	
 	public WikiCrawler(String seedUrl, int max, ArrayList<String> topics, String fileName) {
 		this.seedUrl = seedUrl;
@@ -30,7 +31,40 @@ public class WikiCrawler {
      * graph constructed is empty. If seedUrl does contain all words from topics, then a graph is generated
      */
 	public void crawl() {
-		// TODO
+		Hashtable<String, Vertex> graph = new Hashtable<String, Vertex>();
+		Queue<String> queue = new LinkedList<String>();
+		
+		String root = this.seedUrl;
+		
+		queue.add(root);
+		
+		while(!queue.isEmpty()) {
+			String link = queue.remove();
+			String wikiPage = snagPage(link);
+		}
+	}
+	
+	private String snagPage(String link) {
+		String url = BASE_URL + link;
+		URL wikiLink;
+		InputStream inputStream;
+		InputStreamReader inputStreamReader;
+		BufferedReader bufferedReader;
+		
+		try {
+			wikiLink = new URL(url);
+			inputStream = wikiLink.openStream();
+			inputStreamReader = new InputStreamReader(inputStream);
+			bufferedReader = new BufferedReader(inputStreamReader);
+			
+		} catch (MalformedURLException e) {
+            e.printStackTrace();
+            System.exit(1);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+		return null;
 	}
 	
 	/**
