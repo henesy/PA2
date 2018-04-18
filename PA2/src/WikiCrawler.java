@@ -30,8 +30,9 @@ public class WikiCrawler {
 	/**
 	 * This method will construct the web graph. If seedUrl does not contain all of the words from topics, then the
      * graph constructed is empty. If seedUrl does contain all words from topics, then a graph is generated
+	 * @throws IOException 
      */
-	public void crawl() {
+	public void crawl() throws IOException {
 		Hashtable<String, Vertex> graph = new Hashtable<String, Vertex>();
 		Queue<String> queue = new LinkedList<String>();
 		
@@ -41,31 +42,8 @@ public class WikiCrawler {
 		
 		while(!queue.isEmpty()) {
 			String link = queue.remove();
-			String wikiPage = snagPage(link);
+			String wikiPage = Util.curl(BASE_URL, link);
 		}
-	}
-	
-	private String snagPage(String link) {
-		String url = BASE_URL + link;
-		URL wikiLink;
-		InputStream inputStream;
-		InputStreamReader inputStreamReader;
-		BufferedReader bufferedReader;
-		
-		try {
-			wikiLink = new URL(url);
-			inputStream = wikiLink.openStream();
-			inputStreamReader = new InputStreamReader(inputStream);
-			bufferedReader = new BufferedReader(inputStreamReader);
-			
-		} catch (MalformedURLException e) {
-            e.printStackTrace();
-            System.exit(1);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-		return null;
 	}
 	
 	/**

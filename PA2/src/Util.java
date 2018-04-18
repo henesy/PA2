@@ -17,9 +17,9 @@ public class Util {
 	 * @return
 	 * @throws IOException
 	 */
-	public static String curl(String url) throws IOException {
+	public static String curl(String base, String url) throws IOException {
 		String result = "";
-		Scanner s = new Scanner(new URL(url).openStream());
+		Scanner s = new Scanner(new URL(base + url).openStream());
 		while (s.hasNextLine()) {
 			result += s.nextLine();
 		}
@@ -47,7 +47,7 @@ public class Util {
 	 *            The page to be ripped
 	 * @return Set of links on the page
 	 */
-	public static List<String> extractLinks(String doc) {
+	public static List<String> extractLinks(Collection<String> topics, String doc) {
 		List<String> links = new ArrayList<>();
 
 		Pattern pattern = Pattern.compile("<p>(.*?)</p>");
@@ -61,6 +61,14 @@ public class Util {
 		matcher.reset();
 		while (matcher.find()) {
 			subdoc += matcher.group(1);
+		}
+
+		// if any topics don't appear, return nothing
+		for (String topic : topics) {
+			pattern = Pattern.compile(topic);
+			matcher = pattern.matcher(subdoc);
+			if (!matcher.find())
+				return links;
 		}
 
 		pattern = Pattern.compile("<a href=\"(.*?)\"");
