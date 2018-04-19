@@ -53,7 +53,15 @@ public class Graph {
 		if (requestCounter % 25 == 0 && requestCounter != 0)
 			Thread.sleep(3000);
 		requestCounter++;
-		String doc = Util.curl(WikiCrawler.BASE_URL, url);
+
+		String doc;
+
+		try {
+			doc = Util.curl(WikiCrawler.BASE_URL, url);
+		} catch(java.io.FileNotFoundException e){
+			return false;
+		}
+
 		String subdoc = Util.extractSubdoc(doc);
 		return validatePage(subdoc, url);
 	}
