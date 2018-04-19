@@ -34,23 +34,19 @@ public class Graph {
 		if (!isValidPage(url, subdoc))
 			return;
 		Vertex v = new Vertex(url);
+		nodes.add(url);
 		for (String child : Util.extractLinks(subdoc)) {
 			if (!isValidPage(child))
 				continue;
 			v.children.add(child);
 			toSearch.add(child);
-			nodes.add(url);
+			nodes.add(child);
 			if (nodes.size() >= max)
 				break;
 		}
 		vertices.add(v);
-		nodes.add(url);
 	}
-
-	private boolean cached(String url) {
-		return validLinks.contains(url) || invalidLinks.contains(url);
-	}
-
+	
 	private boolean isValidPage(String url) throws IOException, InterruptedException {
 		if (validLinks.contains(url))
 			return true;
