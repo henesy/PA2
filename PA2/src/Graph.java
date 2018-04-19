@@ -13,6 +13,7 @@ public class Graph {
 	public Set<String> validLinks;
 	public Set<String> nodes;
 	public Collection<String> topics;
+	public StringBuilder stringFormat;
 	public int requestCounter;
 
 	public Graph(Collection<String> topics) {
@@ -22,6 +23,7 @@ public class Graph {
 		validLinks = new HashSet<String>();
 		nodes = new HashSet<String>();
 		this.topics = topics;
+		stringFormat = new StringBuilder();
 		requestCounter = 0;
 	}
 
@@ -30,24 +32,30 @@ public class Graph {
 	}
 
 	public void add(int max, String url) throws IOException, InterruptedException {
-		String subdoc = Util.extractSubdoc(Util.curl(WikiCrawler.BASE_URL, url));
+		String doc = Util.curl(WikiCrawler.BASE_URL, url);
+		String subdoc = Util.extractSubdoc(doc);
 		if (!isValidPage(url, subdoc))
 			return;
 		Vertex v = new Vertex(url);
 		nodes.add(url);
 		for (String child : Util.extractLinks(subdoc)) {
-			if (!isValidPage(child))
+			if (cached(child) || !isValidPage(child))
 				continue;
 			v.children.add(child);
 			toSearch.add(child);
 			nodes.add(child);
+			stringFormat.append(url + " " + child + "\n");
 			if (nodes.size() >= max)
 				break;
 		}
 		vertices.add(v);
 	}
-	
-	private boolean isValidPage(String url) throws IOException, InterruptedException {
+
+	private boolean cached(String url) {
+		return validLinks.contains(url) || invalidLinks.contains(url);
+	}
+
+	public boolean isValidPage(String url) throws IOException, InterruptedException {
 		if (validLinks.contains(url))
 			return true;
 		if (invalidLinks.contains(url))
@@ -60,15 +68,14 @@ public class Graph {
 
 		try {
 			doc = Util.curl(WikiCrawler.BASE_URL, url);
-		} catch(java.io.FileNotFoundException e){
+		} catch (java.io.FileNotFoundException e) {
 			return false;
 		}
 
-		String subdoc = Util.extractSubdoc(doc);
-		return validatePage(subdoc, url);
+		return validatePage(Util.extractSubdoc(doc), url);
 	}
 
-	private boolean isValidPage(String url, String subdoc) throws IOException {
+	public boolean isValidPage(String url, String subdoc) throws IOException {
 		if (validLinks.contains(url))
 			return true;
 		if (invalidLinks.contains(url))
@@ -76,7 +83,7 @@ public class Graph {
 		return validatePage(subdoc, url);
 	}
 
-	private boolean validatePage(String subdoc, String url) {
+	public boolean validatePage(String subdoc, String url) {
 		if (Util.hasTopics(topics, subdoc)) {
 			validLinks.add(url);
 			nodes.add(url);
@@ -93,9 +100,6 @@ public class Graph {
 	}
 
 	public String stringFormat() {
-		String result = "";
-		for (Vertex v : vertices)
-			result += v.stringFormat();
-		return result;
+		return stringFormat.toString();
 	}
 }

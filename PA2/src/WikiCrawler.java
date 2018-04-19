@@ -6,11 +6,7 @@
  */
 
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class WikiCrawler {
 	public static final String BASE_URL = "https://en.wikipedia.org";
@@ -41,51 +37,7 @@ public class WikiCrawler {
 		g.add(max, seedUrl);
 		while (g.nodes.size() < max && !g.toSearch.isEmpty())
 			g.crawlIteration(max);
-		System.out.println(g.stringFormat());
 		Util.writeFile(fileName, g.stringFormat());
+		System.out.println(g.stringFormat());
 	}
-
-	/**
-	 * Takes in a string representation of a wikipedia page. This method returns
-	 * a set of all the string represented links in the doc.
-	 * 
-	 * @param doc
-	 *            The page to be ripped
-	 * @return Set of links on the page
-	 */
-	private List<String> extractLinks(String doc) {
-		List<String> links = new ArrayList<>();
-
-		Pattern pattern = Pattern.compile("<p>(.*?)</p>");
-		Matcher matcher = pattern.matcher(doc);
-		String subdoc = null;
-
-		if (!matcher.find()) {
-			return links;
-		}
-
-		matcher.reset();
-		while (matcher.find()) {
-			subdoc += matcher.group(1);
-		}
-
-		pattern = Pattern.compile("<a href=\"(.*?)\"");
-		matcher = pattern.matcher(subdoc);
-
-		if (!matcher.find()) {
-			return links;
-		}
-
-		matcher.reset();
-		String substring = null;
-		while (matcher.find()) {
-			substring = matcher.group(1);
-			if (!substring.contains(":") && !substring.contains("#") && !substring.contains("index.php?")) {
-				links.add(substring);
-			}
-		}
-
-		return links;
-	}
-
 }
