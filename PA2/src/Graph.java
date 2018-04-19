@@ -80,4 +80,11 @@ public class Graph {
 		return "Graph [toSearch=" + toSearch + ", vertices=" + vertices + ", invalidLinks=" + invalidLinks
 				+ ", validLinks=" + validLinks + ", topics=" + topics + ", requestCounter=" + requestCounter + "]";
 	}
+
+	public String stringFormat() {
+		String result = "";
+		for(Vertex v : vertices)
+			result += v.stringFormat();
+		return result;
+	}
 }

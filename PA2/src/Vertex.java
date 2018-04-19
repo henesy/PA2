@@ -19,4 +19,11 @@ public class Vertex {
 	public String toString() {
 		return "Vertex [url=" + url + ", children=" + children + "]";
 	}
+
+	public String stringFormat() {
+		String result = "";
+		for (String child : children)
+			result += url + " " + child + "\n";
+		return result;
+	}
 }
