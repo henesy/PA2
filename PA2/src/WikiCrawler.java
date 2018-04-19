@@ -80,7 +80,7 @@ public class WikiCrawler {
 		String substring = null;
 		while (matcher.find()) {
 			substring = matcher.group(1);
-			if (!(substring.contains(":")) && !(substring.contains("#") && !(substring.contains("index.php?")))) {
+			if (!substring.contains(":") && !substring.contains("#") && !substring.contains("index.php?") && !substring.contains("upload.wikimedia.org")) {
 				links.add(substring);
 			}
 		}
