@@ -92,4 +92,9 @@ public class Util {
 
 		return links;
 	}
+
+	public static void writeFile(String fileName, String string) {
+		// TODO Auto-generated method stub
+		
+	}
 }

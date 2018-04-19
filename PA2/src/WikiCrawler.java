@@ -41,8 +41,7 @@ public class WikiCrawler {
 		g.add(seedUrl);
 		while (g.vertices.size() < max && !g.toSearch.isEmpty())
 			g.crawlIteration();
-		for (Vertex v : g.vertices)
-			System.out.println(v.url);
+		Util.writeFile(fileName, g.toString());
 	}
 
 	/**
