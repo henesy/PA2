@@ -38,9 +38,10 @@ public class WikiCrawler {
 	 */
 	public void crawl() throws IOException, InterruptedException {
 		Graph g = new Graph(topics);
-		g.add(seedUrl);
-		while (g.vertices.size() < max && !g.toSearch.isEmpty())
-			g.crawlIteration();
+		g.add(max, seedUrl);
+		while (g.nodes.size() < max && !g.toSearch.isEmpty())
+			g.crawlIteration(max);
+		System.out.println(g.stringFormat());
 		Util.writeFile(fileName, g.stringFormat());
 	}
 
