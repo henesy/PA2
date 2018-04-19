@@ -19,7 +19,12 @@ public class Util {
 	 */
 	public static String curl(String base, String url) throws IOException {
 		String result = "";
-		Scanner s = new Scanner(new URL(base + url).openStream());
+		Scanner s;
+		try {
+			s = new Scanner(new URL(base + url).openStream());
+		} catch (Throwable t) {
+			return "";
+		}
 		while (s.hasNextLine()) {
 			result += s.nextLine();
 		}
@@ -95,6 +100,6 @@ public class Util {
 
 	public static void writeFile(String fileName, String string) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
