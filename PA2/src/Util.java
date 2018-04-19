@@ -18,7 +18,7 @@ public class Util {
 	 * @throws IOException
 	 */
 	public static String curl(String base, String url) throws IOException {
-		String result = "";
+		StringBuilder result = new StringBuilder();
 		Scanner s;
 		try {
 			s = new Scanner(new URL(base + url).openStream());
@@ -26,10 +26,10 @@ public class Util {
 			return "";
 		}
 		while (s.hasNextLine()) {
-			result += s.nextLine();
+			result.append(s.nextLine());
 		}
 		s.close();
-		return result;
+		return result.toString();
 	}
 
 	/**
@@ -41,11 +41,11 @@ public class Util {
 	public static String extractSubdoc(String doc) {
 		Pattern pattern = Pattern.compile("<p>(.*?)</p>");
 		Matcher matcher = pattern.matcher(doc);
-		String subdoc = "";
+		StringBuilder subdoc = new StringBuilder();
 		while (matcher.find()) {
-			subdoc += matcher.group(1);
+			subdoc.append(matcher.group(1));
 		}
-		return subdoc;
+		return subdoc.toString();
 	}
 
 	/**

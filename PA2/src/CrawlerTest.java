@@ -33,13 +33,25 @@ public class CrawlerTest {
 		Graph g = new Graph(topics);
 		g.add(3, "/wiki/Duck");
 	}
-	
+
 	@Test
 	public void add3() throws IOException, InterruptedException {
 		ArrayList<String> topics = new ArrayList<String>();
 		topics.add("are");
 		WikiCrawler c = new WikiCrawler("/wiki/Gforth", 10, topics, "foo.txt");
 		c.crawl();
+	}
+
+	@Test
+	public void benchmark() throws IOException {
+		ArrayList<String> topics = new ArrayList<String>();
+		topics.add("Iowa State");
+		topics.add("Cyclones");
+		Graph g = new Graph(topics);
+		long startTime = System.nanoTime();
+		Util.curl(WikiCrawler.BASE_URL, "/wiki/Iowa_State_University");
+		long endTime = System.nanoTime();
+		System.out.println((float)(endTime - startTime) / 1000000 / 1000);
 	}
 	
 	@Test
