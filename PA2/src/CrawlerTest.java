@@ -41,4 +41,13 @@ public class CrawlerTest {
 		WikiCrawler c = new WikiCrawler("/wiki/Gforth", 3, topics, "foo.txt");
 		c.crawl();
 	}
+	
+	@Test
+	public void isu() throws IOException, InterruptedException {
+		ArrayList<String> topics = new ArrayList<String>();
+		topics.add("Iowa State");
+		topics.add("Cyclones");
+		WikiCrawler c = new WikiCrawler("/wiki/Iowa_State_University", 100, topics, "isu.txt");
+		c.crawl();
+	}
 }
