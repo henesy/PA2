@@ -1,6 +1,5 @@
-import java.awt.List;
-import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Tyler Fenton
@@ -8,44 +7,16 @@ import java.util.Hashtable;
  * @author Ryan Radomski
  */
 public class Vertex {
-	
-	private String seedUrl;
-	private String doc;
-	private String parent;
-	private Hashtable<String, String> children;
-	
-	public Vertex(String seedUrl) {
-		this.seedUrl = seedUrl;
-		this.parent = null;
-		children = new Hashtable<String, String>();
+	public String url;
+	public Set<String> children;
+
+	public Vertex(String url) {
+		this.url = url;
+		children = new HashSet<String>();
 	}
-	
-	public String getSeedUrl() {
-		return this.seedUrl;
+
+	@Override
+	public String toString() {
+		return "Vertex [url=" + url + ", children=" + children + "]";
 	}
-	
-	public String getParent() {
-		return this.parent;
-	}
-	
-	public Hashtable<String, String> getChildren() {
-		return this.children;
-	}
-	
-	public String getDoc() {
-		return this.doc;
-	}
-	
-	public void setParent(String parent) {
-		this.parent = parent;
-	}
-	
-	public void addChild(String child) {
-		this.children.putIfAbsent(child, child);
-	}
-	
-	public void setDoc(String doc) {
-		this.doc = doc;
-	}
-	
 }

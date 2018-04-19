@@ -1,3 +1,4 @@
+
 /**
  * @author Tyler Fenton
  * @author Sean Hinchee
@@ -18,73 +19,73 @@ public class WikiCrawler {
 	public ArrayList<String> topics;
 	public HashSet<String> visited;
 	public String fileName;
-	public int requests;
-	
+	public int current;
+
 	public WikiCrawler(String seedUrl, int max, ArrayList<String> topics, String fileName) {
 		this.seedUrl = seedUrl;
 		this.max = max;
 		this.topics = topics;
 		this.fileName = fileName;
 	}
-	
+
 	/**
-	 * This method will construct the web graph. If seedUrl does not contain all of the words from topics, then the
-     * graph constructed is empty. If seedUrl does contain all words from topics, then a graph is generated
-	 * @throws IOException 
-     */
-	public void crawl() throws IOException {
-		Hashtable<String, Vertex> graph = new Hashtable<String, Vertex>();
-		Queue<String> queue = new LinkedList<String>();
-		
-		String root = this.seedUrl;
-		
-		queue.add(root);
-		
-		while(!queue.isEmpty()) {
-			String link = queue.remove();
-			String wikiPage = Util.curl(BASE_URL, link);
-		}
+	 * This method will construct the web graph. If seedUrl does not contain all
+	 * of the words from topics, then the graph constructed is empty. If seedUrl
+	 * does contain all words from topics, then a graph is generated
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public void crawl() throws IOException, InterruptedException {
+		Graph g = new Graph(topics);
+		g.add(seedUrl);
+		while (g.vertices.size() < max && !g.toSearch.isEmpty())
+			g.crawlIteration();
+		for (Vertex v : g.vertices)
+			System.out.println(v.url);
 	}
-	
+
 	/**
-	 * Takes in a string representation of a wikipedia page. This method returns a set of all the string represented
-	 * links in the doc.
-	 * @param doc The page to be ripped
+	 * Takes in a string representation of a wikipedia page. This method returns
+	 * a set of all the string represented links in the doc.
+	 * 
+	 * @param doc
+	 *            The page to be ripped
 	 * @return Set of links on the page
 	 */
 	private List<String> extractLinks(String doc) {
 		List<String> links = new ArrayList<>();
-		
+
 		Pattern pattern = Pattern.compile("<p>(.*?)</p>");
 		Matcher matcher = pattern.matcher(doc);
 		String subdoc = null;
-		
-		if(!matcher.find()) {
+
+		if (!matcher.find()) {
 			return links;
 		}
-		
+
 		matcher.reset();
-		while(matcher.find()) {
+		while (matcher.find()) {
 			subdoc += matcher.group(1);
 		}
-		
+
 		pattern = Pattern.compile("<a href=\"(.*?)\"");
 		matcher = pattern.matcher(subdoc);
-		
-		if(!matcher.find()) {
+
+		if (!matcher.find()) {
 			return links;
 		}
-		
+
 		matcher.reset();
 		String substring = null;
 		while (matcher.find()) {
 			substring = matcher.group(1);
-			if(!(substring.contains(":")) && !(substring.contains("#"))) {
+			if (!(substring.contains(":")) && !(substring.contains("#") && !(substring.contains("index.php?")))) {
 				links.add(substring);
 			}
 		}
-		
+
 		return links;
 	}
-	
+
 }

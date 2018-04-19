@@ -37,7 +37,6 @@ public class Util {
 		Pattern pattern = Pattern.compile("<p>(.*?)</p>");
 		Matcher matcher = pattern.matcher(doc);
 		String subdoc = "";
-
 		while (matcher.find()) {
 			subdoc += matcher.group(1);
 		}
@@ -74,20 +73,19 @@ public class Util {
 		List<String> links = new ArrayList<>();
 		Pattern pattern;
 		Matcher matcher;
-		String subdoc = extractSubdoc(doc);
 
 		pattern = Pattern.compile("<a href=\"(.*?)\"");
-		matcher = pattern.matcher(subdoc);
+		matcher = pattern.matcher(doc);
 
 		if (!matcher.find()) {
 			return links;
 		}
 
 		matcher.reset();
-		String substring = null;
+		String substring = "";
 		while (matcher.find()) {
 			substring = matcher.group(1);
-			if (!(substring.contains(":")) && !(substring.contains("#"))) {
+			if (!substring.contains(":") && !substring.contains("index.php?") && !substring.contains("#")) {
 				links.add(substring);
 			}
 		}
