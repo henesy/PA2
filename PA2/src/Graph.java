@@ -39,6 +39,7 @@ public class Graph {
 				continue;
 			v.children.add(child);
 			toSearch.add(child);
+			nodes.add(url);
 			if (nodes.size() >= max)
 				break;
 		}
