@@ -11,6 +11,7 @@ public class Graph {
 	public Set<Vertex> vertices;
 	public Set<String> invalidLinks;
 	public Set<String> validLinks;
+	public Set<String> nodes;
 	public Collection<String> topics;
 	public int requestCounter;
 
@@ -19,15 +20,16 @@ public class Graph {
 		vertices = new HashSet<Vertex>();
 		invalidLinks = new HashSet<String>();
 		validLinks = new HashSet<String>();
+		nodes = new HashSet<String>();
 		this.topics = topics;
 		requestCounter = 0;
 	}
 
-	public void crawlIteration() throws IOException, InterruptedException {
-		add(toSearch.remove());
+	public void crawlIteration(int max) throws IOException, InterruptedException {
+		add(max, toSearch.remove());
 	}
 
-	public void add(String url) throws IOException, InterruptedException {
+	public void add(int max, String url) throws IOException, InterruptedException {
 		String subdoc = Util.extractSubdoc(Util.curl(WikiCrawler.BASE_URL, url));
 		if (!isValidPage(url, subdoc))
 			return;
@@ -37,8 +39,11 @@ public class Graph {
 				continue;
 			v.children.add(child);
 			toSearch.add(child);
+			if (nodes.size() >= max)
+				break;
 		}
 		vertices.add(v);
+		nodes.add(url);
 	}
 
 	private boolean cached(String url) {
@@ -69,6 +74,7 @@ public class Graph {
 	private boolean validatePage(String subdoc, String url) {
 		if (Util.hasTopics(topics, subdoc)) {
 			validLinks.add(url);
+			nodes.add(url);
 			return true;
 		}
 		invalidLinks.add(url);
@@ -83,7 +89,7 @@ public class Graph {
 
 	public String stringFormat() {
 		String result = "";
-		for(Vertex v : vertices)
+		for (Vertex v : vertices)
 			result += v.stringFormat();
 		return result;
 	}

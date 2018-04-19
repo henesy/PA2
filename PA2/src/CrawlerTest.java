@@ -31,14 +31,14 @@ public class CrawlerTest {
 		ArrayList<String> topics = new ArrayList<String>();
 		topics.add("loons");
 		Graph g = new Graph(topics);
-		g.add("/wiki/Duck");
+		g.add(3, "/wiki/Duck");
 	}
 	
 	@Test
 	public void add3() throws IOException, InterruptedException {
 		ArrayList<String> topics = new ArrayList<String>();
 		topics.add("are");
-		WikiCrawler c = new WikiCrawler("/wiki/Gforth", 3, topics, "foo.txt");
+		WikiCrawler c = new WikiCrawler("/wiki/Gforth", 10, topics, "foo.txt");
 		c.crawl();
 	}
 }
