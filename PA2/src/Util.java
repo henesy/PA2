@@ -91,6 +91,43 @@ public class Util {
 		}
 		return null;
 	}
+	
+	public static Graph generateGraph(String file) {
+		Graph graph = new Graph();
+		Scanner scan = new Scanner(file);
+		int numVertices = Integer.parseInt(scan.nextLine());
+		while(scan.hasNextLine()) {
+			String line = scan.nextLine();
+			String[] vertices = line.split(" ");
+			if(graph.adjacencies.containsKey(vertices[0])) { //if has vertex in graph
+				Adjacency adj = graph.adjacencies.get(vertices[0]); //gets vertex from graph
+				if(graph.adjacencies.containsKey(vertices[1])) { //if has child in graph
+					adj.children.add(vertices[1]); //puts child into vertex's children
+					Adjacency child = graph.adjacencies.get(vertices[1]); //
+					child.parents.add(vertices[0]);
+				} else {
+					adj.children.add(vertices[1]);
+					Adjacency child = new Adjacency(vertices[1]);
+					child.parents.add(vertices[0]);
+					graph.adjacencies.put(child.url, child);
+				}
+			} else {
+				Adjacency adj = new Adjacency(vertices[0]);
+				if(graph.adjacencies.containsKey(vertices[1])) {
+					adj.children.add(vertices[1]);
+					Adjacency child = graph.adjacencies.get(vertices[1]);
+					child.parents.add(vertices[0]);
+				} else {
+					adj.children.add(vertices[1]);
+					Adjacency child = new Adjacency(vertices[1]);
+					child.parents.add(vertices[0]);
+					graph.adjacencies.put(child.url, child);
+				}
+				graph.adjacencies.put(adj.url, adj);
+			}
+		}
+		return graph;
+	}
 
 	/**
 	 * Git subdoc

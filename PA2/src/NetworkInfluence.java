@@ -1,3 +1,7 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +20,23 @@ public class NetworkInfluence {
 	private Graph graph;
 
 	public NetworkInfluence(String graphData) {
+		String file = "";
+		String line;
+		
+		try {
+			FileReader fileReader = new FileReader(graphData);
+			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			while((line = bufferedReader.readLine()) != null) {
+				file += line +"\n";
+			}
+		} catch(FileNotFoundException e) {
+			e.printStackTrace();
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
 	}
 
 	/**

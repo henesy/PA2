@@ -31,6 +31,17 @@ public class Graph {
 		stringFormat = new StringBuilder();
 		requestCounter = 0;
 	}
+	
+	public Graph() {
+		toSearch = new LinkedList<String>();
+		adjacencies = new Hashtable<String, Adjacency>();
+		invalidLinks = new HashSet<String>();
+		validLinks = new HashSet<String>();
+		visited = new HashSet<String>();
+		docs = new HashMap<String, String>();
+		stringFormat = new StringBuilder();
+		requestCounter = 0;
+	}
 
 	public void crawlIteration(int max) throws IOException, InterruptedException {
 		add(max, toSearch.remove());

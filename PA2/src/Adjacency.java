@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,6 +17,8 @@ public class Adjacency {
 	public Adjacency(String url) {
 		this.url = url;
 		children = new HashSet<String>();
+		parents = new ArrayList<String>();
+		int length = 0;
 	}
 
 	@Override
