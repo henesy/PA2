@@ -21,8 +21,7 @@ public class NetworkInfluence {
 	 */
 	public int outDegree(String v) {
 		Adjacency adjacency = graph.adjacencies.get(v);
-		return 0;
-		// TODO
+		return adjacency.children.size();
 	}
 	
 	/**
