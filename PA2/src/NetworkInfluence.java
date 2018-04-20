@@ -20,6 +20,7 @@ public class NetworkInfluence {
 	 * @return The out degree of v
 	 */
 	public int outDegree(String v) {
+		Adjacency adjacency = graph.adjacencies.get(v);
 		return 0;
 		// TODO
 	}
