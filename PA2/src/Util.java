@@ -66,7 +66,7 @@ public class Util {
 	
 	public static Adjacency bfs(Graph graph, String start, String destination) {
 		int visitTime = 0;
-		Queue<String> queue = new LinkedList();
+		Queue<String> queue = new LinkedList<String>();
 		for(Map.Entry<String, Adjacency> entry : graph.adjacencies.entrySet()) {
 			entry.getValue().length = graph.adjacencies.size() + 1;
 		}

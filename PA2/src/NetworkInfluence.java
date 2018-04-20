@@ -1,7 +1,6 @@
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Tyler Fenton
@@ -67,7 +66,7 @@ public class NetworkInfluence {
 	 * @return distance from s to v
 	 */
 	public int distance(ArrayList<String> s, String v) {
-		List<Adjacency> smolGraph = new ArrayList(s.size());
+		List<Adjacency> smolGraph = new ArrayList<Adjacency>(s.size());
 		for(String str : s) {
 			smolGraph.add(Util.bfs(this.graph, str, v));
 		}

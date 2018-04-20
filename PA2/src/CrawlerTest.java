@@ -1,9 +1,7 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.junit.Test;
