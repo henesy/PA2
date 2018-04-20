@@ -1,0 +1,3 @@
+/wiki/Complexity_theory /wiki/Complexity
+/wiki/Complexity_theory /wiki/Complex_systems
+/wiki/Complexity /wiki/System

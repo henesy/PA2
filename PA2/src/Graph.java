@@ -8,7 +8,8 @@ import java.util.Set;
 public class Graph {
 
 	public Queue<String> toSearch;
-	public Set<Vertex> vertices;
+	public Set<Adjacency> adjacencies;
+	public Set<String> adjacencyUrls;
 	public Set<String> invalidLinks;
 	public Set<String> validLinks;
 	public Set<String> nodes;
@@ -18,10 +19,11 @@ public class Graph {
 
 	public Graph(Collection<String> topics) {
 		toSearch = new LinkedList<String>();
-		vertices = new HashSet<Vertex>();
+		adjacencies = new HashSet<Adjacency>();
 		invalidLinks = new HashSet<String>();
 		validLinks = new HashSet<String>();
 		nodes = new HashSet<String>();
+		adjacencyUrls = new HashSet<String>();
 		this.topics = topics;
 		stringFormat = new StringBuilder();
 		requestCounter = 0;
@@ -32,26 +34,33 @@ public class Graph {
 	}
 
 	public void add(int max, String url) throws IOException, InterruptedException {
+		if (adjacencyUrls.contains(url))
+			return;
 		String doc = Util.curl(WikiCrawler.BASE_URL, url);
 		String subdoc = Util.extractSubdoc(doc);
-		if (!isValidPage(url, subdoc))
+		if (!validPage(url, subdoc))
 			return;
-		Vertex v = new Vertex(url);
+		Adjacency adj = new Adjacency(url);
 		nodes.add(url);
+		if (adjacencyUrls.contains(adj.url))
+			return;
+		adjacencyUrls.add(adj.url);
+		adjacencies.add(adj);
 		for (String child : Util.extractLinks(subdoc)) {
-			if (cached(child) || !isValidPage(child))
+			if (!isValidPage(child))
 				continue;
-			v.children.add(child);
-			toSearch.add(child);
-			nodes.add(child);
-			stringFormat.append(url + " " + child + "\n");
-			if (nodes.size() >= max)
-				break;
+			if (nodes.size() > max) {
+				if (nodes.contains(child))
+					adj.children.add(child);
+			} else {
+				toSearch.add(child);
+				nodes.add(child);
+				stringFormat.append(url + " " + child + "\n");
+			}
 		}
-		vertices.add(v);
 	}
 
-	private boolean cached(String url) {
+	public boolean cached(String url) {
 		return validLinks.contains(url) || invalidLinks.contains(url);
 	}
 
@@ -75,7 +84,7 @@ public class Graph {
 		return validatePage(Util.extractSubdoc(doc), url);
 	}
 
-	public boolean isValidPage(String url, String subdoc) throws IOException {
+	public boolean validPage(String url, String subdoc) throws IOException {
 		if (validLinks.contains(url))
 			return true;
 		if (invalidLinks.contains(url))
@@ -95,7 +104,7 @@ public class Graph {
 
 	@Override
 	public String toString() {
-		return "Graph [toSearch=" + toSearch + ", vertices=" + vertices + ", invalidLinks=" + invalidLinks
+		return "Graph [toSearch=" + toSearch + ", vertices=" + adjacencies + ", invalidLinks=" + invalidLinks
 				+ ", validLinks=" + validLinks + ", topics=" + topics + ", requestCounter=" + requestCounter + "]";
 	}
 
