@@ -9,6 +9,8 @@ import java.util.Set;
 public class Vertex {
 	public String url;
 	public Set<String> children;
+	public Set<String> parents;
+	public int length;
 
 	public Vertex(String url) {
 		this.url = url;

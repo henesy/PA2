@@ -7,6 +7,8 @@ import java.util.ArrayList;
  */
 
 public class NetworkInfluence {
+	
+	private Graph graph;
 
 	public NetworkInfluence(String graphData) {
 		// TODO
