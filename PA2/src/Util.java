@@ -63,7 +63,7 @@ public class Util {
 		ret.add(u);
 		return (ArrayList<String>) ret;
 	}
-	
+
 	public static Adjacency bfs(Graph graph, String start, String destination) {
 		int visitTime = 0;
 		Queue<String> queue = new LinkedList<String>();
@@ -75,16 +75,17 @@ public class Util {
 		visitTime++;
 		
 		while(!queue.isEmpty()) {
-			String head;
-			head = queue.remove();
+			String head = queue.remove();
 			Adjacency adjacency = graph.adjacencies.get(head);
 			for(String child : adjacency.children) {
-				if(child == destination) {
-					graph.adjacencies.get(child).length = visitTime;
-					return graph.adjacencies.get(child);
+				Adjacency childAdjacency = graph.adjacencies.get(child);
+				
+				if(childAdjacency != null && child == destination) {
+					childAdjacency.length = visitTime;
+					return childAdjacency;
 				}
-				if(graph.adjacencies.get(child).length > visitTime) {
-					graph.adjacencies.get(child).length = visitTime;
+				if(childAdjacency != null && childAdjacency.length > visitTime) {
+					childAdjacency.length = visitTime;
 					queue.add(child);
 				}
 			}
