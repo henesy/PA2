@@ -66,9 +66,9 @@ public class Util {
 	
 	public static Adjacency bfs(Graph graph, String start, String destination) {
 		int visitTime = 0;
-		Queue<String> queue = new LinkedList<String>();
-		for(String adj : graph.adjacencies.keySet()) {
-			graph.adjacencies.get(adj).length = graph.adjacencies.size() + 1;
+		Queue<String> queue = new LinkedList();
+		for(Map.Entry<String, Adjacency> entry : graph.adjacencies.entrySet()) {
+			entry.getValue().length = graph.adjacencies.size() + 1;
 		}
 		queue.add(start);
 		graph.adjacencies.get(start).length = visitTime;
@@ -77,7 +77,8 @@ public class Util {
 		while(!queue.isEmpty()) {
 			String head;
 			head = queue.remove();
-			for(String child : graph.adjacencies.get(head).children) {
+			Adjacency adjacency = graph.adjacencies.get(head);
+			for(String child : adjacency.children) {
 				if(child == destination) {
 					graph.adjacencies.get(child).length = visitTime;
 					return graph.adjacencies.get(child);
