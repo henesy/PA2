@@ -38,8 +38,10 @@ public class NetworkInfluence {
 	 * @return shortest path from u to v
 	 */
 	public ArrayList<String> shortestPath(String u, String v) {
-		return null;
-		// TODO
+		Adjacency vert = Util.bfs(this.graph, u, v);
+		ArrayList<String> shortestPath = Util.followBackUp(this.graph, u, v);
+		Collections.reverse(shortestPath);
+		return shortestPath;
 	}
 
 	/**
@@ -52,8 +54,7 @@ public class NetworkInfluence {
 	 * @return distance from u to v
 	 */
 	public int distance(String u, String v) {
-		return 0;
-		// TODO
+		return Util.bfs(this.graph, u, v).length;
 	}
 
 	/**
@@ -66,8 +67,17 @@ public class NetworkInfluence {
 	 * @return distance from s to v
 	 */
 	public int distance(ArrayList<String> s, String v) {
-		return 0;
-		// TODO
+		List<Adjacency> smolGraph = new ArrayList(s.size());
+		for(String str : s) {
+			smolGraph.add(Util.bfs(this.graph, str, v));
+		}
+		Adjacency smolAdj = smolGraph.get(0);
+		for(int i = 1; i < smolGraph.size(); i++) {
+			if(smolGraph.get(i).length < smolAdj.length) {
+				smolAdj = smolGraph.get(i);
+			}
+		}
+		return smolAdj.length;
 	}
 
 	/**
