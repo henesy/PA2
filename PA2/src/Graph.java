@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
@@ -21,7 +22,7 @@ public class Graph {
 
 	public Graph(Collection<String> topics) {
 		toSearch = new LinkedList<String>();
-		adjacencies = new HashMap<String, Adjacency>();
+		adjacencies = new Hashtable<String, Adjacency>();
 		invalidLinks = new HashSet<String>();
 		validLinks = new HashSet<String>();
 		nodes = new HashSet<String>();
