@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -10,8 +11,7 @@ import java.util.Set;
 public class Graph {
 
 	public Queue<String> toSearch;
-	public Set<Adjacency> adjacencies;
-	public Set<String> adjacencyUrls;
+	public Map<String, Adjacency> adjacencies;
 	public Map<String, String> docs;
 	public Set<String> invalidLinks;
 	public Set<String> validLinks;
@@ -22,11 +22,10 @@ public class Graph {
 
 	public Graph(Collection<String> topics) {
 		toSearch = new LinkedList<String>();
-		adjacencies = new HashSet<Adjacency>();
+		adjacencies = new HashMap<String, Adjacency>();
 		invalidLinks = new HashSet<String>();
 		validLinks = new HashSet<String>();
 		nodes = new HashSet<String>();
-		adjacencyUrls = new HashSet<String>();
 		docs = new HashMap<String, String>();
 		this.topics = topics;
 		stringFormat = new StringBuilder();
@@ -38,34 +37,56 @@ public class Graph {
 	}
 
 	public void add(int max, String url) throws IOException, InterruptedException {
-		if (adjacencyUrls.contains(url))
+		if (maxedOutNodes(max) && !nodeMarked(url))
 			return;
-		String subdoc = getDoc(url);
-		if (!validPage(url, subdoc))
+		if (adjacencies.containsKey(url) || !validPage(url))
 			return;
 		Adjacency adj = new Adjacency(url);
-		nodes.add(url);
-		if (adjacencyUrls.contains(adj.url))
-			return;
-		adjacencyUrls.add(adj.url);
-		adjacencies.add(adj);
-		for (String child : Util.extractLinks(subdoc)) {
-			if (nodes.size() > max) {
-				if (nodes.contains(child))
-					adj.children.add(child);
-			} else {
-				if (!isValidPage(child))
-					continue;
-				toSearch.add(child);
-				nodes.add(child);
-				stringFormat.append(url + " " + child + "\n");
-			}
-		}
+		markNode(url);
+		adjacencies.put(url, adj);
+		addChildren(max, url, adj);
 	}
 
-	public String getDoc(String url) throws IOException {
+	public void addChildren(int max, String url, Adjacency adj) throws IOException, InterruptedException {
+		for (String child : Util.extractLinks(getDoc(url)))
+			addChild(max, child, adj, url);
+	}
+
+	public void addChild(int max, String child, Adjacency adj, String url) throws IOException, InterruptedException {
+		if (maxedOutNodes(max)) {
+			if (nodes.contains(child)) {
+				adj.children.add(child);
+				stringFormat.append(url + " " + child + "\n");
+			}
+			return;
+		}
+		if (!isValidPage(child))
+			return;
+		toSearch.add(child);
+		nodes.add(child);
+		adj.children.add(child);
+		stringFormat.append(url + " " + child + "\n");
+	}
+
+	public boolean maxedOutNodes(int max) {
+		return nodes.size() > max;
+	}
+
+	public boolean nodeMarked(String url) {
+		return nodes.contains(url);
+	}
+
+	public void markNode(String url) {
+		nodes.add(url);
+	}
+
+	public String getDoc(String url) throws IOException, InterruptedException {
+		if (requestCounter % 25 == 0 && requestCounter != 0)
+			Thread.sleep(3000);
+		requestCounter++;
 		if (docs.containsKey(url))
 			return docs.get(url);
+		System.out.println(url);
 		String subdoc = Util.extractSubdoc(Util.curl(WikiCrawler.BASE_URL, url));
 		docs.put(url, subdoc);
 		return subdoc;
@@ -80,19 +101,16 @@ public class Graph {
 			return true;
 		if (invalidLinks.contains(url))
 			return false;
-		if (requestCounter % 25 == 0 && requestCounter != 0)
-			Thread.sleep(3000);
-		requestCounter++;
 
 		return validatePage(getDoc(url), url);
 	}
 
-	public boolean validPage(String url, String subdoc) throws IOException {
+	public boolean validPage(String url) throws IOException, InterruptedException {
 		if (validLinks.contains(url))
 			return true;
 		if (invalidLinks.contains(url))
 			return false;
-		return validatePage(subdoc, url);
+		return validatePage(getDoc(url), url);
 	}
 
 	public boolean validatePage(String subdoc, String url) {

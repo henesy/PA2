@@ -86,7 +86,7 @@ public class CrawlerTest {
 	public void numEdges() throws IOException, InterruptedException {
 		HashSet<Integer> g = new HashSet<Integer>();
 		ArrayList<String> topics = new ArrayList<String>();
-		WikiCrawler c = new WikiCrawler("/wiki/Complexity_theory", 4, topics, "complexity.txt");
+		WikiCrawler c = new WikiCrawler("/wiki/Complexity_theory", 100, topics, "complexity.txt");
 		c.crawl();
 	}
 
