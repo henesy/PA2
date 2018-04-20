@@ -1,8 +1,8 @@
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
@@ -15,17 +15,17 @@ public class Graph {
 	public Map<String, String> docs;
 	public Set<String> invalidLinks;
 	public Set<String> validLinks;
-	public Set<String> nodes;
+	public Set<String> visited;
 	public Collection<String> topics;
 	public StringBuilder stringFormat;
 	public int requestCounter;
 
 	public Graph(Collection<String> topics) {
 		toSearch = new LinkedList<String>();
-		adjacencies = new HashMap<String, Adjacency>();
+		adjacencies = new Hashtable<String, Adjacency>();
 		invalidLinks = new HashSet<String>();
 		validLinks = new HashSet<String>();
-		nodes = new HashSet<String>();
+		visited = new HashSet<String>();
 		docs = new HashMap<String, String>();
 		this.topics = topics;
 		stringFormat = new StringBuilder();
@@ -37,47 +37,47 @@ public class Graph {
 	}
 
 	public void add(int max, String url) throws IOException, InterruptedException {
-		if (maxedOutNodes(max) && !nodeMarked(url))
-			return;
-		if (adjacencies.containsKey(url) || !validPage(url))
+		if (maxedOutNodes(max) && !nodeMarked(url) || adjacencies.containsKey(url) || !validPage(url))
 			return;
 		Adjacency adj = new Adjacency(url);
 		markNode(url);
 		adjacencies.put(url, adj);
-		addChildren(max, url, adj);
+		addChildren(max, adj);
 	}
 
-	public void addChildren(int max, String url, Adjacency adj) throws IOException, InterruptedException {
-		for (String child : Util.extractLinks(getDoc(url)))
-			addChild(max, child, adj, url);
+	public void addChildren(int max, Adjacency adj) throws IOException, InterruptedException {
+		for (String child : Util.extractLinks(getDoc(adj.url)))
+			addChild(max, child, adj);
 	}
 
-	public void addChild(int max, String child, Adjacency adj, String url) throws IOException, InterruptedException {
+	public void addToAdjacency(Adjacency adj, String child) {
+		adj.children.add(child);
+		stringFormat.append(adj.url + " " + child + "\n");
+	}
+
+	public void addChild(int max, String child, Adjacency adj) throws IOException, InterruptedException {
 		if (maxedOutNodes(max)) {
-			if (nodes.contains(child)) {
-				adj.children.add(child);
-				stringFormat.append(url + " " + child + "\n");
-			}
+			if (visited.contains(child))
+				addToAdjacency(adj, child);
 			return;
 		}
 		if (!isValidPage(child))
 			return;
 		toSearch.add(child);
-		nodes.add(child);
-		adj.children.add(child);
-		stringFormat.append(url + " " + child + "\n");
+		visited.add(child);
+		addToAdjacency(adj, child);
 	}
 
 	public boolean maxedOutNodes(int max) {
-		return nodes.size() > max;
+		return visited.size() > max;
 	}
 
 	public boolean nodeMarked(String url) {
-		return nodes.contains(url);
+		return visited.contains(url);
 	}
 
 	public void markNode(String url) {
-		nodes.add(url);
+		visited.add(url);
 	}
 
 	public String getDoc(String url) throws IOException, InterruptedException {
@@ -86,7 +86,6 @@ public class Graph {
 		requestCounter++;
 		if (docs.containsKey(url))
 			return docs.get(url);
-		System.out.println(url);
 		String subdoc = Util.extractSubdoc(Util.curl(WikiCrawler.BASE_URL, url));
 		docs.put(url, subdoc);
 		return subdoc;
@@ -116,7 +115,7 @@ public class Graph {
 	public boolean validatePage(String subdoc, String url) {
 		if (Util.hasTopics(topics, subdoc)) {
 			validLinks.add(url);
-			nodes.add(url);
+			visited.add(url);
 			return true;
 		}
 		invalidLinks.add(url);
