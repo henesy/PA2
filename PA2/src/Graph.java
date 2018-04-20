@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -36,21 +37,20 @@ public class Graph {
 	}
 
 	public void add(int max, String url) throws IOException, InterruptedException {
-		if (adjacencies.containsKey(url))
+		if (nodes.size() > max && !nodes.contains(url))
 			return;
-		String subdoc = getDoc(url);
-		if (!validPage(url, subdoc))
+		if (adjacencies.containsKey(url) || !validPage(url))
 			return;
 		Adjacency adj = new Adjacency(url);
 		nodes.add(url);
 		adjacencies.put(url, adj);
-		for (String child : Util.extractLinks(subdoc)) {
-			if (!isValidPage(child))
-				continue;
+		for (String child : Util.extractLinks(getDoc(url))) {
 			if (nodes.size() > max) {
 				if (nodes.contains(child))
 					adj.children.add(child);
 			} else {
+				if (!isValidPage(child))
+					continue;
 				toSearch.add(child);
 				nodes.add(child);
 				stringFormat.append(url + " " + child + "\n");
@@ -58,9 +58,13 @@ public class Graph {
 		}
 	}
 
-	public String getDoc(String url) throws IOException {
+	public String getDoc(String url) throws IOException, InterruptedException {
+		if (requestCounter % 25 == 0 && requestCounter != 0)
+			Thread.sleep(3000);
+		requestCounter++;
 		if (docs.containsKey(url))
 			return docs.get(url);
+		System.out.println(url);
 		String subdoc = Util.extractSubdoc(Util.curl(WikiCrawler.BASE_URL, url));
 		docs.put(url, subdoc);
 		return subdoc;
@@ -75,19 +79,16 @@ public class Graph {
 			return true;
 		if (invalidLinks.contains(url))
 			return false;
-		if (requestCounter % 25 == 0 && requestCounter != 0)
-			Thread.sleep(3000);
-		requestCounter++;
 
 		return validatePage(getDoc(url), url);
 	}
 
-	public boolean validPage(String url, String subdoc) throws IOException {
+	public boolean validPage(String url) throws IOException, InterruptedException {
 		if (validLinks.contains(url))
 			return true;
 		if (invalidLinks.contains(url))
 			return false;
-		return validatePage(subdoc, url);
+		return validatePage(getDoc(url), url);
 	}
 
 	public boolean validatePage(String subdoc, String url) {
