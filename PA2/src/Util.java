@@ -6,7 +6,9 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,6 +58,33 @@ public class Util {
 		}
 		ret.add(u);
 		return (ArrayList<String>) ret;
+	}
+	
+	public static Adjacency bfs(Graph graph, String start, String destination) {
+		int visitTime = 0;
+		Queue<String> queue = new LinkedList();
+		for(Adjacency adj : graph.adjacencies) {
+			adj.length = graph.adjacencies.size() + 1;
+		}
+		queue.add(start);
+		graph.adjacencies.get(start).length = visitTime;
+		visitTime++;
+		
+		while(!queue.isEmpty()) {
+			String head;
+			head = queue.remove();
+			for(String child : graph.adjacencies.get(head)) {
+				if(child == destination) {
+					graph.adjacencies.get(child).length = visitTime;
+					return graph.adjacencies.get(child);
+				}
+				if(graph.adjacencies.get(child).length > visitTime) {
+					graph.adjacencies.get(child).length = visitTime;
+					queue.add(child);
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
