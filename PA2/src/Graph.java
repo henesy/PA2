@@ -1,7 +1,9 @@
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
@@ -10,6 +12,7 @@ public class Graph {
 	public Queue<String> toSearch;
 	public Set<Adjacency> adjacencies;
 	public Set<String> adjacencyUrls;
+	public Map<String, String> docs;
 	public Set<String> invalidLinks;
 	public Set<String> validLinks;
 	public Set<String> nodes;
@@ -24,6 +27,7 @@ public class Graph {
 		validLinks = new HashSet<String>();
 		nodes = new HashSet<String>();
 		adjacencyUrls = new HashSet<String>();
+		docs = new HashMap<String, String>();
 		this.topics = topics;
 		stringFormat = new StringBuilder();
 		requestCounter = 0;
@@ -36,8 +40,7 @@ public class Graph {
 	public void add(int max, String url) throws IOException, InterruptedException {
 		if (adjacencyUrls.contains(url))
 			return;
-		String doc = Util.curl(WikiCrawler.BASE_URL, url);
-		String subdoc = Util.extractSubdoc(doc);
+		String subdoc = getDoc(url);
 		if (!validPage(url, subdoc))
 			return;
 		Adjacency adj = new Adjacency(url);
@@ -47,17 +50,25 @@ public class Graph {
 		adjacencyUrls.add(adj.url);
 		adjacencies.add(adj);
 		for (String child : Util.extractLinks(subdoc)) {
-			if (!isValidPage(child))
-				continue;
 			if (nodes.size() > max) {
 				if (nodes.contains(child))
 					adj.children.add(child);
 			} else {
+				if (!isValidPage(child))
+					continue;
 				toSearch.add(child);
 				nodes.add(child);
 				stringFormat.append(url + " " + child + "\n");
 			}
 		}
+	}
+
+	public String getDoc(String url) throws IOException {
+		if (docs.containsKey(url))
+			return docs.get(url);
+		String subdoc = Util.extractSubdoc(Util.curl(WikiCrawler.BASE_URL, url));
+		docs.put(url, subdoc);
+		return subdoc;
 	}
 
 	public boolean cached(String url) {
@@ -73,15 +84,7 @@ public class Graph {
 			Thread.sleep(3000);
 		requestCounter++;
 
-		String doc;
-
-		try {
-			doc = Util.curl(WikiCrawler.BASE_URL, url);
-		} catch (java.io.FileNotFoundException e) {
-			return false;
-		}
-
-		return validatePage(Util.extractSubdoc(doc), url);
+		return validatePage(getDoc(url), url);
 	}
 
 	public boolean validPage(String url, String subdoc) throws IOException {
