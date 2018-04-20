@@ -33,6 +33,5 @@ public class Adjacency {
 	@Override
 	public boolean equals(Object o) {
 		return ((Adjacency) o).url.equals(url);
-
 	}
 }

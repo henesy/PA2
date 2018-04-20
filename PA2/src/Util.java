@@ -5,8 +5,13 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,7 +37,7 @@ public class Util {
 		s.close();
 		return result.toString();
 	}
-	
+
 	/**
 	 * Follows the shortest path back up from vertex v to vertex u
 	 * 
@@ -43,10 +48,10 @@ public class Util {
 	public static ArrayList<String> followBackUp(Graph graph, String u, String v) {
 		Adjacency adj = graph.adjacencies.get(v);
 		Collection<String> ret = new ArrayList<>();
-		while(!adj.url.equals(u)) {
+		while (!adj.url.equals(u)) {
 			String smol = adj.parents.get(0);
-			for(String s : adj.parents) {
-				if(graph.adjacencies.get(smol).length > graph.adjacencies.get(s).length) {
+			for (String s : adj.parents) {
+				if (graph.adjacencies.get(smol).length > graph.adjacencies.get(s).length) {
 					smol = s;
 				}
 			}
@@ -123,8 +128,26 @@ public class Util {
 		return links;
 	}
 
+	public static <E, V> Map<E, Set<V>> groupBy(Collection<V> coll, Function<V, E> f) {
+		Map<E, Set<V>> m = new HashMap<E, Set<V>>();
+		for (V v : coll) {
+			E key = f.apply(v);
+			Set<V> vs = m.containsKey(key) ? m.get(key) : new HashSet<V>();
+			vs.add(v);
+		}
+		return m;
+	}
+	
+	public static float influence(Graph g, String u) {
+		return (float)groupBy(g.adjacencies.values(), new DistanceFrom(g, u))
+			.entrySet().parallelStream()
+			.map(me -> me.getKey())
+			.map(x -> 1 / Math.pow(2, x))
+			.mapToDouble(x -> x.doubleValue())
+			.sum();
+	}
+
 	public static void writeFile(String fileName, String string) throws IOException {
-		System.out.println();
 		Writer writer = new OutputStreamWriter(new FileOutputStream(fileName), "utf-8");
 		writer.write(string);
 		writer.close();

@@ -1,7 +1,9 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.junit.Test;
@@ -86,6 +88,41 @@ public class CrawlerTest {
 		ArrayList<String> topics = new ArrayList<String>();
 		WikiCrawler c = new WikiCrawler("/wiki/Complexity_theory", 100, topics, "complexity.txt");
 		c.crawl();
+	}
+	
+	@Test
+	public void influence() throws IOException, InterruptedException {
+		Graph g = new Graph(new LinkedList<>());
+		Adjacency a = new Adjacency("A");
+		a.children.add("B");
+		a.children.add("C");
+		a.children.add("D");
+		g.adjacencies.put("A", a);
+		
+		Adjacency b = new Adjacency("B");
+		a.children.add("I");
+		a.children.add("J");
+		g.adjacencies.put("B", b);
+		
+		Adjacency c = new Adjacency("C");
+		a.children.add("E");
+		a.children.add("F");
+		a.children.add("B");
+		a.children.add("D");
+		g.adjacencies.put("C", c);
+		
+		Adjacency d = new Adjacency("D");
+		a.children.add("G");
+		a.children.add("H");
+		a.children.add("A");
+		g.adjacencies.put("D", d);
+		
+		Adjacency e = new Adjacency("E");
+		a.children.add("A");
+		a.children.add("A");
+		g.adjacencies.put("E", e);
+		
+		System.out.println(Util.influence(g, "A"));
 	}
 
 	@Test
