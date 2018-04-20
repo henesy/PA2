@@ -37,28 +37,47 @@ public class Graph {
 	}
 
 	public void add(int max, String url) throws IOException, InterruptedException {
-		if (nodes.size() > max && !nodes.contains(url))
+		if (maxedOutNodes(max) && !nodeMarked(url))
 			return;
 		if (adjacencies.containsKey(url) || !validPage(url))
 			return;
 		Adjacency adj = new Adjacency(url);
-		nodes.add(url);
+		markNode(url);
 		adjacencies.put(url, adj);
-		for (String child : Util.extractLinks(getDoc(url))) {
-			if (nodes.size() > max) {
-				if (nodes.contains(child)) {
-					adj.children.add(child);
-					stringFormat.append(url + " " + child + "\n");
-				}
-			} else {
-				if (!isValidPage(child))
-					continue;
-				toSearch.add(child);
-				nodes.add(child);
+		addChildren(max, url, adj);
+	}
+
+	public void addChildren(int max, String url, Adjacency adj) throws IOException, InterruptedException {
+		for (String child : Util.extractLinks(getDoc(url)))
+			addChild(max, child, adj, url);
+	}
+
+	public void addChild(int max, String child, Adjacency adj, String url) throws IOException, InterruptedException {
+		if (maxedOutNodes(max)) {
+			if (nodes.contains(child)) {
 				adj.children.add(child);
 				stringFormat.append(url + " " + child + "\n");
 			}
+			return;
 		}
+		if (!isValidPage(child))
+			return;
+		toSearch.add(child);
+		nodes.add(child);
+		adj.children.add(child);
+		stringFormat.append(url + " " + child + "\n");
+	}
+
+	public boolean maxedOutNodes(int max) {
+		return nodes.size() > max;
+	}
+
+	public boolean nodeMarked(String url) {
+		return nodes.contains(url);
+	}
+
+	public void markNode(String url) {
+		nodes.add(url);
 	}
 
 	public String getDoc(String url) throws IOException, InterruptedException {
