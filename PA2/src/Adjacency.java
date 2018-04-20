@@ -7,6 +7,7 @@ import java.util.Set;
  * @author Sean Hinchee
  * @author Ryan Radomski
  */
+
 public class Adjacency {
 	public String url;
 	public Set<String> children;

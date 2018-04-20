@@ -17,6 +17,12 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @author Tyler Fenton
+ * @author Sean Hinchee
+ * @author Ryan Radomski
+ */
+
 public class Util {
 	/**
 	 * Fetches the web page at URL and returns it's string representation
@@ -182,5 +188,15 @@ public class Util {
 		Writer writer = new OutputStreamWriter(new FileOutputStream(fileName), "utf-8");
 		writer.write(string);
 		writer.close();
+	}
+	
+	// Recursively counts the number of children from a given 's' ;; this calculates the outdegree of s
+	public static int countChildren(Graph g, String s) {
+		// Outdegree is 0 if it connects to no othre nodes
+		int count = 0;
+		count += g.adjacencies.get(s).children.size();
+		for(String childString : g.adjacencies.get(s).children)
+			count += countChildren(g, childString);
+		return count;
 	}
 }

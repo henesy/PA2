@@ -3,6 +3,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.PriorityQueue;
 import java.util.Set;
 
 /**
@@ -111,15 +112,30 @@ public class NetworkInfluence {
 	}
 
 	/**
-	 * Returns a set of k nodes obtained by using Degree Greedy algorithm
+	 * Returns a set of k nodes as per nodes with the top k outdegrees (nodes reachable from said node)
 	 * 
 	 * @param k
 	 *            Number of nodes to be in the resulting set
 	 * @return resulting set of nodes
 	 */
 	public ArrayList<String> mostInfluentialDegree(int k) {
-		return null;
-		// TODO
+		//TODO
+		int i;
+		ArrayList<String> al = new ArrayList<String>();
+		
+		// Tuples go into the PQ when we have their total outdegree
+		PriorityQueue<Tuple> pq = new PriorityQueue<>();
+
+		for(String s : graph.visited) {
+			int od = Util.countChildren(graph, s);
+			Tuple t = new Tuple(s, od);
+			pq.add(t);
+		}
+		
+		for(i = 0; i < k && !pq.isEmpty(); i++)
+			al.add(pq.remove().s);
+		
+		return al;
 	}
 
 	/**
