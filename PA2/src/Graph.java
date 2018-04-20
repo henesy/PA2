@@ -46,13 +46,16 @@ public class Graph {
 		adjacencies.put(url, adj);
 		for (String child : Util.extractLinks(getDoc(url))) {
 			if (nodes.size() > max) {
-				if (nodes.contains(child))
+				if (nodes.contains(child)) {
 					adj.children.add(child);
+					stringFormat.append(url + " " + child + "\n");
+				}
 			} else {
 				if (!isValidPage(child))
 					continue;
 				toSearch.add(child);
 				nodes.add(child);
+				adj.children.add(child);
 				stringFormat.append(url + " " + child + "\n");
 			}
 		}
