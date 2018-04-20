@@ -15,7 +15,7 @@ public class Graph {
 	public Map<String, String> docs;
 	public Set<String> invalidLinks;
 	public Set<String> validLinks;
-	public Set<String> nodes;
+	public Set<String> visited;
 	public Collection<String> topics;
 	public StringBuilder stringFormat;
 	public int requestCounter;
@@ -25,7 +25,7 @@ public class Graph {
 		adjacencies = new Hashtable<String, Adjacency>();
 		invalidLinks = new HashSet<String>();
 		validLinks = new HashSet<String>();
-		nodes = new HashSet<String>();
+		visited = new HashSet<String>();
 		docs = new HashMap<String, String>();
 		this.topics = topics;
 		stringFormat = new StringBuilder();
@@ -57,27 +57,27 @@ public class Graph {
 
 	public void addChild(int max, String child, Adjacency adj) throws IOException, InterruptedException {
 		if (maxedOutNodes(max)) {
-			if (nodes.contains(child))
+			if (visited.contains(child))
 				addToAdjacency(adj, child);
 			return;
 		}
 		if (!isValidPage(child))
 			return;
 		toSearch.add(child);
-		nodes.add(child);
+		visited.add(child);
 		addToAdjacency(adj, child);
 	}
 
 	public boolean maxedOutNodes(int max) {
-		return nodes.size() > max;
+		return visited.size() > max;
 	}
 
 	public boolean nodeMarked(String url) {
-		return nodes.contains(url);
+		return visited.contains(url);
 	}
 
 	public void markNode(String url) {
-		nodes.add(url);
+		visited.add(url);
 	}
 
 	public String getDoc(String url) throws IOException, InterruptedException {
@@ -115,7 +115,7 @@ public class Graph {
 	public boolean validatePage(String subdoc, String url) {
 		if (Util.hasTopics(topics, subdoc)) {
 			validLinks.add(url);
-			nodes.add(url);
+			visited.add(url);
 			return true;
 		}
 		invalidLinks.add(url);
