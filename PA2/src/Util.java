@@ -101,7 +101,8 @@ public class Util {
 	}
 
 	public static void writeFile(String fileName, String string) throws IOException {
-		Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), "utf-8"));
+		System.out.println();
+		Writer writer = new OutputStreamWriter(new FileOutputStream(fileName), "utf-8");
 		writer.write(string);
 		writer.close();
 	}

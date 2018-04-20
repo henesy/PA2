@@ -1,5 +1,5 @@
 
 public class Edge {
-	public Vertex v0;
-	public Vertex v1;
+	public Adjacency v0;
+	public Adjacency v1;
 }

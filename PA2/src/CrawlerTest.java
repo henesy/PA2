@@ -1,8 +1,8 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.junit.Test;
@@ -77,10 +77,17 @@ public class CrawlerTest {
 		ArrayList<String> topics = new ArrayList<String>();
 		topics.add("Iowa State");
 		topics.add("Cyclones");
-		
-		Graph g = new Graph(topics);
+
 		String doc = Util.extractSubdoc(Util.curl(WikiCrawler.BASE_URL, "/wiki/Big_12_Conference"));
 		System.out.println(Pattern.compile("Cyclones").matcher(doc).find());
+	}
+	
+	@Test
+	public void numEdges() throws IOException, InterruptedException {
+		HashSet<Integer> g = new HashSet<Integer>();
+		ArrayList<String> topics = new ArrayList<String>();
+		WikiCrawler c = new WikiCrawler("/wiki/Complexity_theory", 4, topics, "complexity.txt");
+		c.crawl();
 	}
 
 	@Test

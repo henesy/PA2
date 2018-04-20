@@ -6,13 +6,13 @@ import java.util.Set;
  * @author Sean Hinchee
  * @author Ryan Radomski
  */
-public class Vertex {
+public class Adjacency {
 	public String url;
 	public Set<String> children;
 	public Set<String> parents;
 	public int length;
 
-	public Vertex(String url) {
+	public Adjacency(String url) {
 		this.url = url;
 		children = new HashSet<String>();
 	}
@@ -27,5 +27,11 @@ public class Vertex {
 		for (String child : children)
 			result += url + " " + child + "\n";
 		return result;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return ((Adjacency) o).url.equals(url);
+
 	}
 }
