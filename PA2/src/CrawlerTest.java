@@ -59,7 +59,7 @@ public class CrawlerTest {
 		ArrayList<String> topics = new ArrayList<String>();
 		topics.add("Iowa State");
 		topics.add("Cyclones");
-		WikiCrawler c = new WikiCrawler("/wiki/Iowa_State_University", 10, topics, "isu.txt");
+		WikiCrawler c = new WikiCrawler("/wiki/Iowa_State_University", 100, topics, "isu.txt");
 		c.crawl();
 	}
 }
