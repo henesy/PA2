@@ -9,6 +9,8 @@ import java.util.Set;
 public class Adjacency {
 	public String url;
 	public Set<String> children;
+	public Set<String> parents;
+	public int length;
 
 	public Adjacency(String url) {
 		this.url = url;
