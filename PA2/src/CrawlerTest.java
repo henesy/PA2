@@ -10,12 +10,52 @@ import org.junit.Test;
 
 public class CrawlerTest {
 
+	public static Graph dummyGraph() {
+		Graph g = new Graph(new LinkedList<>());
+		Adjacency a = new Adjacency("A");
+		a.children.add("B");
+		a.children.add("C");
+		a.children.add("D");
+		g.adjacencies.put("A", a);
+		
+		Adjacency b = new Adjacency("B");
+		a.children.add("I");
+		a.children.add("J");
+		g.adjacencies.put("B", b);
+		
+		Adjacency c = new Adjacency("C");
+		a.children.add("E");
+		a.children.add("F");
+		a.children.add("B");
+		a.children.add("D");
+		g.adjacencies.put("C", c);
+		
+		Adjacency d = new Adjacency("D");
+		a.children.add("G");
+		a.children.add("H");
+		a.children.add("A");
+		g.adjacencies.put("D", d);
+		
+		Adjacency e = new Adjacency("E");
+		a.children.add("A");
+		a.children.add("A");
+		g.adjacencies.put("E", e);
+		
+		return g;
+	}
+	
 	@Test
 	public void subdoc() throws IOException {
 		String doc = Util.curl(WikiCrawler.BASE_URL, "/wiki/Teletubbies");
 		String subdoc = Util.extractSubdoc(doc);
 		Collection<String> results = Util.extractLinks(subdoc);
 		assert (results.contains("/wiki/Pre-school"));
+	}
+	
+	@Test
+	public void bfs() {
+		Graph g = dummyGraph();
+		Util.bfs(g, "A", "H");
 	}
 
 	@Test
@@ -91,38 +131,8 @@ public class CrawlerTest {
 	}
 	
 	@Test
-	public void influence() throws IOException, InterruptedException {
-		Graph g = new Graph(new LinkedList<>());
-		Adjacency a = new Adjacency("A");
-		a.children.add("B");
-		a.children.add("C");
-		a.children.add("D");
-		g.adjacencies.put("A", a);
-		
-		Adjacency b = new Adjacency("B");
-		a.children.add("I");
-		a.children.add("J");
-		g.adjacencies.put("B", b);
-		
-		Adjacency c = new Adjacency("C");
-		a.children.add("E");
-		a.children.add("F");
-		a.children.add("B");
-		a.children.add("D");
-		g.adjacencies.put("C", c);
-		
-		Adjacency d = new Adjacency("D");
-		a.children.add("G");
-		a.children.add("H");
-		a.children.add("A");
-		g.adjacencies.put("D", d);
-		
-		Adjacency e = new Adjacency("E");
-		a.children.add("A");
-		a.children.add("A");
-		g.adjacencies.put("E", e);
-		
-		System.out.println(Util.influence(g, "A"));
+	public void influence() throws IOException, InterruptedException {		
+		System.out.println(Util.influence(dummyGraph(), "A"));
 	}
 
 	@Test
