@@ -119,7 +119,6 @@ public class NetworkInfluence {
 	 * @return resulting set of nodes
 	 */
 	public ArrayList<String> mostInfluentialDegree(int k) {
-		//TODO
 		int i;
 		ArrayList<String> al = new ArrayList<String>();
 		
