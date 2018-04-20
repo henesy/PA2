@@ -1,11 +1,13 @@
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -98,8 +100,10 @@ public class Util {
 		return links;
 	}
 
-	public static void writeFile(String fileName, String string) {
-		// TODO Auto-generated method stub
-
+	public static void writeFile(String fileName, String string) throws IOException {
+		System.out.println();
+		Writer writer = new OutputStreamWriter(new FileOutputStream(fileName), "utf-8");
+		writer.write(string);
+		writer.close();
 	}
 }
