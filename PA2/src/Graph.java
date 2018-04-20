@@ -10,8 +10,7 @@ import java.util.Set;
 public class Graph {
 
 	public Queue<String> toSearch;
-	public Set<Adjacency> adjacencies;
-	public Set<String> adjacencyUrls;
+	public Map<String, Adjacency> adjacencies;
 	public Map<String, String> docs;
 	public Set<String> invalidLinks;
 	public Set<String> validLinks;
@@ -22,11 +21,10 @@ public class Graph {
 
 	public Graph(Collection<String> topics) {
 		toSearch = new LinkedList<String>();
-		adjacencies = new HashSet<Adjacency>();
+		adjacencies = new HashMap<String, Adjacency>();
 		invalidLinks = new HashSet<String>();
 		validLinks = new HashSet<String>();
 		nodes = new HashSet<String>();
-		adjacencyUrls = new HashSet<String>();
 		docs = new HashMap<String, String>();
 		this.topics = topics;
 		stringFormat = new StringBuilder();
@@ -38,24 +36,21 @@ public class Graph {
 	}
 
 	public void add(int max, String url) throws IOException, InterruptedException {
-		if (adjacencyUrls.contains(url))
+		if (adjacencies.containsKey(url))
 			return;
 		String subdoc = getDoc(url);
 		if (!validPage(url, subdoc))
 			return;
 		Adjacency adj = new Adjacency(url);
 		nodes.add(url);
-		if (adjacencyUrls.contains(adj.url))
-			return;
-		adjacencyUrls.add(adj.url);
-		adjacencies.add(adj);
+		adjacencies.put(url, adj);
 		for (String child : Util.extractLinks(subdoc)) {
+			if (!isValidPage(child))
+				continue;
 			if (nodes.size() > max) {
 				if (nodes.contains(child))
 					adj.children.add(child);
 			} else {
-				if (!isValidPage(child))
-					continue;
 				toSearch.add(child);
 				nodes.add(child);
 				stringFormat.append(url + " " + child + "\n");
