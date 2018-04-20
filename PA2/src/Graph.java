@@ -8,6 +8,12 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
+/**
+ * @author Tyler Fenton
+ * @author Sean Hinchee
+ * @author Ryan Radomski
+ */
+
 public class Graph {
 
 	public Queue<String> toSearch;

@@ -6,6 +6,12 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 
+/**
+ * @author Tyler Fenton
+ * @author Sean Hinchee
+ * @author Ryan Radomski
+ */
+
 public class CrawlerTest {
 
 	public static Graph dummyGraph() {

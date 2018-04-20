@@ -17,6 +17,12 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @author Tyler Fenton
+ * @author Sean Hinchee
+ * @author Ryan Radomski
+ */
+
 public class Util {
 	/**
 	 * Fetches the web page at URL and returns it's string representation
@@ -63,7 +69,7 @@ public class Util {
 		ret.add(u);
 		return (ArrayList<String>) ret;
 	}
-	
+
 	public static Adjacency bfs(Graph graph, String start, String destination) {
 		int visitTime = 0;
 		Queue<String> queue = new LinkedList<String>();
@@ -75,16 +81,17 @@ public class Util {
 		visitTime++;
 		
 		while(!queue.isEmpty()) {
-			String head;
-			head = queue.remove();
+			String head = queue.remove();
 			Adjacency adjacency = graph.adjacencies.get(head);
 			for(String child : adjacency.children) {
-				if(child == destination) {
-					graph.adjacencies.get(child).length = visitTime;
-					return graph.adjacencies.get(child);
+				Adjacency childAdjacency = graph.adjacencies.get(child);
+				
+				if(childAdjacency != null && child == destination) {
+					childAdjacency.length = visitTime;
+					return childAdjacency;
 				}
-				if(graph.adjacencies.get(child).length > visitTime) {
-					graph.adjacencies.get(child).length = visitTime;
+				if(childAdjacency != null && childAdjacency.length > visitTime) {
+					childAdjacency.length = visitTime;
 					queue.add(child);
 				}
 			}
@@ -218,5 +225,15 @@ public class Util {
 		Writer writer = new OutputStreamWriter(new FileOutputStream(fileName), "utf-8");
 		writer.write(string);
 		writer.close();
+	}
+	
+	// Recursively counts the number of children from a given 's' ;; this calculates the outdegree of s
+	public static int countChildren(Graph g, String s) {
+		// Outdegree is 0 if it connects to no othre nodes
+		int count = 0;
+		count += g.adjacencies.get(s).children.size();
+		for(String childString : g.adjacencies.get(s).children)
+			count += countChildren(g, childString);
+		return count;
 	}
 }
