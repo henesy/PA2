@@ -33,6 +33,30 @@ public class Util {
 		s.close();
 		return result.toString();
 	}
+	
+	/**
+	 * Follows the shortest path back up from vertex v to vertex u
+	 * 
+	 * @param u
+	 * @param v
+	 * @return
+	 */
+	public static ArrayList<String> followBackUp(Graph graph, String u, String v) {
+		Adjacency adj = graph.adjacencies.get(v);
+		Collection<String> ret = new ArrayList<>();
+		while(!adj.url.equals(u)) {
+			String smol = adj.parents.get(0);
+			for(String s : adj.parents) {
+				if(graph.adjacencies.get(smol).length > graph.adjacencies.get(s).length) {
+					smol = s;
+				}
+			}
+			ret.add(smol);
+			adj = graph.adjacencies.get(smol);
+		}
+		ret.add(u);
+		return (ArrayList<String>) ret;
+	}
 
 	/**
 	 * Git subdoc

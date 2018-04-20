@@ -1,4 +1,5 @@
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Set;
 public class Adjacency {
 	public String url;
 	public Set<String> children;
-	public Set<String> parents;
+	public List<String> parents;
 	public int length;
 
 	public Adjacency(String url) {
