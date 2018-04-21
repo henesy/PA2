@@ -77,6 +77,9 @@ public class CrawlerTest {
 	@Test
 	public void influence() {
 		Graph g = dummyGraph();
+		NetworkInfluence ne = new NetworkInfluence("");
+		ne.graph = g;
+		System.out.println(ne.influence("A"));
 	}
 	
 	@Test

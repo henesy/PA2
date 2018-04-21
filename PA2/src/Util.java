@@ -170,6 +170,7 @@ public class Util {
 		for (V v : coll) {
 			E key = f.apply(v);
 			Set<V> vs = m.containsKey(key) ? m.get(key) : new HashSet<V>();
+			m.put(key, vs);
 			vs.add(v);
 		}
 		return m;

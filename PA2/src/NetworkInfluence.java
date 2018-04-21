@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class NetworkInfluence {
 
-	private Graph graph;
+	public Graph graph;
 
 	public NetworkInfluence(String graphData) {
 	}
