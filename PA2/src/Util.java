@@ -215,11 +215,20 @@ public class Util {
 	
 	// Recursively counts the number of children from a given 's' ;; this calculates the outdegree of s
 	public static int countChildren(Graph g, String s) {
+		Set<String> v = new HashSet<String>();
+		v.add(s);
+		return countChildren(g, s, v);
+	}
+	
+	private static int countChildren(Graph g, String s, Set<String> v) {
 		// Outdegree is 0 if it connects to no other nodes
 		int count = 0;
 		count += g.adjacencies.get(s).children.size();
-		for(String childString : g.adjacencies.get(s).children)
-			count += countChildren(g, childString);
+		for(String childString : g.adjacencies.get(s).children) {
+			if(v.contains(childString)) continue;
+			v.add(childString);
+			count += countChildren(g, childString, v);
+		}
 		return count;
 	}
 }
