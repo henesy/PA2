@@ -111,14 +111,14 @@ public class NetworkInfluence {
 	 *            The vertex to get the influence of
 	 * @return influence of u
 	 */
-	public float influence(String u) {
+	/*public float influence(String u) {
 		return (float)Util.groupBy(graph.adjacencies.values(), new DistanceFrom(graph, u))
 			.entrySet().parallelStream()
 			.map(me -> me.getKey())
 			.map(x -> 1 / Math.pow(2, x))
 			.mapToDouble(x -> x.doubleValue())
 			.sum();
-	}
+	}*/
 
 	/**
 	 * Returns the influence of given set of vertices s

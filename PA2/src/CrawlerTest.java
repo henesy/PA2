@@ -74,13 +74,13 @@ public class CrawlerTest {
 		assert (results.contains("/wiki/Pre-school"));
 	}
 	
-	@Test
+	/*@Test
 	public void influence() {
 		Graph g = dummyGraph();
 		NetworkInfluence ne = new NetworkInfluence("");
 		ne.graph = g;
 		System.out.println(ne.influence("A"));
-	}
+	}*/
 	
 	@Test
 	public void bfs() {
