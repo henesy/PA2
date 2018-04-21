@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.junit.Test;
 
@@ -79,7 +80,7 @@ public class CrawlerTest {
 		Graph g = dummyGraph();
 		NetworkInfluence ne = new NetworkInfluence("smolgraph.txt");
 		ne.graph = g;
-		System.out.println(ne.influence("A"));
+		System.out.println(ne.influence("F"));
 	}
 	
 	@Test
@@ -92,8 +93,26 @@ public class CrawlerTest {
 	public void mostInfluentialModular() {
 		Graph g = dummyGraph();
 		NetworkInfluence ne = new NetworkInfluence("smolgraph.txt");
-//		ne.graph = g;
-		System.out.println(ne.mostInfluentialModular(10));
+		ne.graph = g;
+		g.adjacencies.keySet().stream().forEach(x -> System.out.println(x + " " + ne.influence(x)));
+		System.out.println(ne.mostInfluentialModular(3));
+	}
+
+	@Test
+	public void mostInfluentialSubModular() {
+		Graph g = dummyGraph();
+		NetworkInfluence ne = new NetworkInfluence("smolgraph.txt");
+		ne.graph = g;
+		g.adjacencies.keySet().stream().forEach(x -> System.out.println(x + " " + ne.influence(x)));
+		System.out.println(ne.mostInfluentialSubModular(3));
+	}
+
+	@Test
+	public void mostInfluentialDegree() {
+		Graph g = dummyGraph();
+		NetworkInfluence ne = new NetworkInfluence("smolgraph.txt");
+		g.adjacencies.keySet().stream().forEach(x -> System.out.println(x + " " + ne.influence(x)));
+		System.out.println(ne.mostInfluentialDegree(3));
 	}
 	
 	@Test

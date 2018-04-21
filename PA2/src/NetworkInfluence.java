@@ -2,10 +2,18 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Tyler Fenton
@@ -110,8 +118,11 @@ public class NetworkInfluence {
 	 */
 	public float influence(String u) {
 		return (float)graph.adjacencies.keySet().stream()
-				.map(x -> graph.adjacencies.get(x).length)
-				.filter(x -> x > 0)
+				.map((String url) -> {
+					Util.bfs(graph, url, "");
+					return graph.adjacencies.get(u).length;
+				})
+				.filter(x -> x > 0 && x < graph.adjacencies.size() + 1)
 				.map(x -> 1 / Math.pow(2, x))
 				.mapToDouble(x -> x.doubleValue())
 				.sum();
@@ -143,7 +154,7 @@ public class NetworkInfluence {
 		// Tuples go into the PQ when we have their total outdegree
 		PriorityQueue<Tuple> pq = new PriorityQueue<>();
 
-		for(String s : graph.visited) {
+		for(String s : graph.adjacencies.keySet()) {
 			int od = Util.countChildren(graph, s);
 			Tuple t = new Tuple(s, od);
 			pq.add(t);
@@ -191,7 +202,40 @@ public class NetworkInfluence {
 	 * @return resulting set of nodes
 	 */
 	public ArrayList<String> mostInfluentialSubModular(int k) {
-		return null;
-		// TODO
+		Set<String> set = new HashSet<String>();
+		set.add(mostInfluentialModular(1).get(0));
+		while(set.size() < k) {
+			List<SimpleEntry<String, Float>> l = graph.adjacencies.keySet().stream()
+			.filter(x -> !set.contains(x))
+			.map(x -> {
+				set.add(x);
+				float influence = subModularInfluence(set);
+				set.remove(x);
+				return new SimpleEntry<String, Float>(x, influence);
+			}).collect(Collectors.toCollection(LinkedList::new));
+			SimpleEntry<String, Float> max = l.get(0);
+			for(int i = 1; i < l.size(); i++) {
+				if(l.get(i).getValue() > max.getValue())
+					max = l.get(i);
+			}
+			set.add(max.getKey());
+		}
+		return set.stream().collect(Collectors.toCollection(ArrayList::new));
+	}
+	
+	public Stream<Float> allInfluences(String node, Set<String> doNotSearch) {
+		return graph.adjacencies.keySet().stream()
+				.filter(x -> !doNotSearch.contains(x))
+				.map(x -> influence(x));
+	}
+	
+	public float subModularInfluence(Set<String> set) {
+		return (float)graph.adjacencies.keySet().stream()
+			.filter(x -> !set.contains(x))
+			.map(node -> allInfluences(node, set)
+					.mapToDouble(x -> x.doubleValue())
+					.max().getAsDouble())
+			.mapToDouble(x -> x.doubleValue())
+			.sum();
 	}
 }
