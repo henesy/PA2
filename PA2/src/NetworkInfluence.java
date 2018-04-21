@@ -97,12 +97,11 @@ public class NetworkInfluence {
 	 */
 	public float influence(String u) {
 		Function<String, Integer> f = s -> graph.adjacencies.get(s).length;
-		Collection<String> urls = graph.adjacencies.values().stream()
-				.map(a -> a.url)
+		Collection<String> urls = graph.adjacencies.keySet().stream()
 				.collect(Collectors.toCollection(LinkedList::new));
-		return (float)Util.groupBy(urls, f)
-				.entrySet().parallelStream()
-				.map(me -> me.getKey())
+		return (float)urls.stream()
+				.map(x -> graph.adjacencies.get(x).length)
+				.filter(x -> x > 0)
 				.map(x -> 1 / Math.pow(2, x))
 				.mapToDouble(x -> x.doubleValue())
 				.sum();
