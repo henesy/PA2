@@ -145,8 +145,22 @@ public class NetworkInfluence {
 	 * @return resulting set of nodes
 	 */
 	public ArrayList<String> mostInfluentialModular(int k) {
-		return null;
-		// TODO
+		int i;
+		ArrayList<String> al = new ArrayList<String>();
+		
+		// Tuples go into the PQ when we have their total outdegree
+		PriorityQueue<Tuple> pq = new PriorityQueue<>();
+
+		for(String s : graph.visited) {
+			float od = influence(s);
+			Tuple t = new Tuple(s, od);
+			pq.add(t);
+		}
+		
+		for(i = 0; i < k && !pq.isEmpty(); i++)
+			al.add(pq.remove().s);
+		
+		return al;
 	}
 
 	/**
