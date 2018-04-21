@@ -171,7 +171,7 @@ public class NetworkInfluence {
 		// Tuples go into the PQ when we have their total outdegree
 		PriorityQueue<Tuple> pq = new PriorityQueue<>();
 
-		for(String s : graph.visited) {
+		for(String s : graph.adjacencies.keySet()) {
 			float od = influence(s);
 			Tuple t = new Tuple(s, od);
 			pq.add(t);

@@ -91,7 +91,7 @@ public class CrawlerTest {
 	@Test
 	public void mostInfluentialModular() {
 		Graph g = dummyGraph();
-		NetworkInfluence ne = new NetworkInfluence("complexity.txt");
+		NetworkInfluence ne = new NetworkInfluence("smolgraph.txt");
 //		ne.graph = g;
 		System.out.println(ne.mostInfluentialModular(10));
 	}
