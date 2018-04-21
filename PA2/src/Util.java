@@ -56,29 +56,27 @@ public class Util {
 	public static ArrayList<String> followBackUp(Graph graph, String u, String v) {
 		Adjacency adj = graph.adjacencies.get(v);
 		Collection<String> ret = new ArrayList<>();
+		ret.add(v);
 		while (!adj.url.equals(u)) {
 			String smol = adj.parents.get(0);
-			for (String s : adj.parents) {
-				if (graph.adjacencies.get(smol).length > graph.adjacencies.get(s).length) {
-					smol = s;
+			for (int i = 1; i < adj.parents.size(); i++) {
+				if (graph.adjacencies.get(smol).length > graph.adjacencies.get(adj.parents.get(i)).length) {
+					smol = adj.parents.get(i);
 				}
 			}
 			ret.add(smol);
 			adj = graph.adjacencies.get(smol);
 		}
-		ret.add(u);
 		return (ArrayList<String>) ret;
 	}
 
 	public static Adjacency bfs(Graph graph, String start, String destination) {
-		int visitTime = 0;
 		Queue<String> queue = new LinkedList<String>();
 		for(Map.Entry<String, Adjacency> entry : graph.adjacencies.entrySet()) {
 			entry.getValue().length = graph.adjacencies.size() + 1;
 		}
 		queue.add(start);
-		graph.adjacencies.get(start).length = visitTime;
-		visitTime++;
+		graph.adjacencies.get(start).length = 0;
 		
 		while(!queue.isEmpty()) {
 			String head = queue.remove();
@@ -86,17 +84,13 @@ public class Util {
 			for(String child : adjacency.children) {
 				Adjacency childAdjacency = graph.adjacencies.get(child);
 				
-				if(childAdjacency != null && child == destination) {
-					childAdjacency.length = visitTime;
-					return childAdjacency;
-				}
-				if(childAdjacency != null && childAdjacency.length > visitTime) {
-					childAdjacency.length = visitTime;
+				if(childAdjacency != null && childAdjacency.length > adjacency.length) {
+					childAdjacency.length = adjacency.length + 1;
 					queue.add(child);
 				}
 			}
 		}
-		return null;
+		return graph.adjacencies.get(destination);
 	}
 	
 	public static Graph generateGraph(String file) {
