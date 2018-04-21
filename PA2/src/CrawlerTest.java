@@ -89,6 +89,12 @@ public class CrawlerTest {
 	}
 
 	@Test
+	public void mostInfluentialSubModular() {
+		Graph g = dummyGraph();
+		
+	}
+	
+	@Test
 	public void containstopic() throws IOException {
 		LinkedList<String> topics = new LinkedList<String>();
 		topics.add("are");
