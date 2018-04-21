@@ -37,7 +37,6 @@ public class WikiCrawler {
 		g.add(max, seedUrl);
 		while (!g.toSearch.isEmpty())
 			g.crawlIteration(max);
-		Util.writeFile(fileName, g.stringFormat.toString());
-//		System.out.println(g.stringFormat.toString());
+		Util.writeFile(fileName, g.stringFormat());
 	}
 }

@@ -1,3 +1,4 @@
+100
 /wiki/Computer_Science /wiki/Computer
 /wiki/Computer_Science /wiki/Computation
 /wiki/Computer_Science /wiki/Procedure_(computer_science)
@@ -103,7 +104,6 @@
 /wiki/Computer_Science /wiki/Data_compression
 /wiki/Computer_Science /wiki/Cryptography
 /wiki/Computer_Science /wiki/Error_detection_and_correction
-/wiki/Computer_Science /wiki/Linear_network_coding
 /wiki/Computer_Science /wiki/Programming_language
 /wiki/Computer_Science /wiki/Mathematics
 /wiki/Computer_Science /wiki/Mathematics

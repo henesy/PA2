@@ -1,3 +1,4 @@
+10
 /wiki/Gforth /wiki/Forth_(programming_language)
 /wiki/Gforth /wiki/Unix-like
 /wiki/Gforth /wiki/Microsoft_Windows
@@ -7,10 +8,8 @@
 /wiki/Forth_(programming_language) /wiki/Imperative_programming
 /wiki/Forth_(programming_language) /wiki/Stack-oriented_programming_language
 /wiki/Forth_(programming_language) /wiki/Programming_language
-/wiki/Forth_(programming_language) /wiki/Charles_H._Moore
 /wiki/Forth_(programming_language) /wiki/Threaded_code
 /wiki/Forth_(programming_language) /wiki/Gforth
-/wiki/Forth_(programming_language) /wiki/Charles_H._Moore
 /wiki/Forth_(programming_language) /wiki/Microsoft_Windows
 /wiki/Forth_(programming_language) /wiki/Threaded_code
 /wiki/Forth_(programming_language) /wiki/Microsoft_Windows
@@ -26,11 +25,9 @@
 /wiki/GNU_Compiler_Collection /wiki/Imperative_programming
 /wiki/Threaded_code /wiki/Programming_language
 /wiki/Threaded_code /wiki/Forth_(programming_language)
-/wiki/Threaded_code /wiki/Charles_H._Moore
 /wiki/Threaded_code /wiki/Forth_(programming_language)
 /wiki/Stack-oriented_programming_language /wiki/Forth_(programming_language)
 /wiki/Programming_language /wiki/Imperative_programming
 /wiki/Programming_language /wiki/Forth_(programming_language)
 /wiki/Programming_language /wiki/Forth_(programming_language)
 /wiki/Programming_language /wiki/Imperative_programming
-/wiki/Charles_H._Moore /wiki/Forth_(programming_language)

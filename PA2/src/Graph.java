@@ -86,7 +86,7 @@ public class Graph {
 	}
 
 	public boolean maxedOutNodes(int max) {
-		return visited.size() > max;
+		return visited.size() >= max;
 	}
 
 	public boolean nodeMarked(String url) {
@@ -146,6 +146,7 @@ public class Graph {
 	}
 
 	public String stringFormat() {
+		stringFormat.insert(0, visited.size() + "\n");
 		return stringFormat.toString();
 	}
 }
