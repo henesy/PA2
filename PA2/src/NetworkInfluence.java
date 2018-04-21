@@ -1,9 +1,14 @@
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * @author Tyler Fenton
@@ -90,12 +95,16 @@ public class NetworkInfluence {
 	 * @return influence of u
 	 */
 	public float influence(String u) {
-		return (float)Util.groupBy(graph.adjacencies.values(), new DistanceFrom(graph, u))
-			.entrySet().parallelStream()
-			.map(me -> me.getKey())
-			.map(x -> 1 / Math.pow(2, x))
-			.mapToDouble(x -> x.doubleValue())
-			.sum();
+		Function<String, Integer> f = s -> graph.adjacencies.get(s).length;
+		Collection<String> urls = graph.adjacencies.values().stream()
+				.map(a -> a.url)
+				.collect(Collectors.toCollection(LinkedList::new));
+		return (float)Util.groupBy(urls, f)
+				.entrySet().parallelStream()
+				.map(me -> me.getKey())
+				.map(x -> 1 / Math.pow(2, x))
+				.mapToDouble(x -> x.doubleValue())
+				.sum();
 	}
 
 	/**

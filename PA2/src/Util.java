@@ -168,15 +168,6 @@ public class Util {
 		}
 		return m;
 	}
-	
-	public static float influence(Graph g, String u) {
-		return (float)groupBy(g.adjacencies.values(), new DistanceFrom(g, u))
-			.entrySet().parallelStream()
-			.map(me -> me.getKey())
-			.map(x -> 1 / Math.pow(2, x))
-			.mapToDouble(x -> x.doubleValue())
-			.sum();
-	}
 
 	public static void writeFile(String fileName, String string) throws IOException {
 		Writer writer = new OutputStreamWriter(new FileOutputStream(fileName), "utf-8");

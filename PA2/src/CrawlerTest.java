@@ -9,37 +9,55 @@ import org.junit.Test;
 public class CrawlerTest {
 
 	public static Graph dummyGraph() {
-		Graph g = new Graph(new LinkedList<>());
+		Graph gr = new Graph(new LinkedList<>());
 		Adjacency a = new Adjacency("A");
+		Adjacency b = new Adjacency("B");
+		Adjacency c = new Adjacency("C");
+		Adjacency d = new Adjacency("D");
+		Adjacency e = new Adjacency("E");
+		Adjacency f = new Adjacency("F");
+		Adjacency g = new Adjacency("G");
+		Adjacency h = new Adjacency("H");
+
+		gr.adjacencies.put("A", a);
+		gr.adjacencies.put("B", b);
+		gr.adjacencies.put("C", c);
+		gr.adjacencies.put("D", d);
+		gr.adjacencies.put("E", e);
+		gr.adjacencies.put("F", f);
+		gr.adjacencies.put("G", g);
+		gr.adjacencies.put("H", h);
+		
 		a.children.add("B");
 		a.children.add("C");
 		a.children.add("D");
-		g.adjacencies.put("A", a);
 		
-		Adjacency b = new Adjacency("B");
-		a.children.add("I");
-		a.children.add("J");
-		g.adjacencies.put("B", b);
+		b.children.add("I");
+		b.children.add("J");
 		
-		Adjacency c = new Adjacency("C");
-		a.children.add("E");
-		a.children.add("F");
-		a.children.add("B");
-		a.children.add("D");
-		g.adjacencies.put("C", c);
+		c.children.add("E");
+		c.children.add("F");
+		c.children.add("B");
+		c.children.add("D");
 		
-		Adjacency d = new Adjacency("D");
-		a.children.add("G");
-		a.children.add("H");
-		a.children.add("A");
-		g.adjacencies.put("D", d);
 		
-		Adjacency e = new Adjacency("E");
-		a.children.add("A");
-		a.children.add("A");
-		g.adjacencies.put("E", e);
+		d.children.add("G");
+		d.children.add("H");
+		d.children.add("A");
+	
+		e.children.add("A");
+		e.children.add("A");
 		
-		return g;
+		a.length = 0;
+		b.length = 1;
+		c.length = 1;
+		d.length = 1;
+		e.length = 2;
+		f.length = 2;
+		g.length = 2;
+		h.length = 2;
+		
+		return gr;
 	}
 	
 	@Test
@@ -48,6 +66,11 @@ public class CrawlerTest {
 		String subdoc = Util.extractSubdoc(doc);
 		Collection<String> results = Util.extractLinks(subdoc);
 		assert (results.contains("/wiki/Pre-school"));
+	}
+	
+	@Test
+	public void influence() {
+		Graph g = dummyGraph();
 	}
 	
 	@Test
@@ -126,11 +149,6 @@ public class CrawlerTest {
 		ArrayList<String> topics = new ArrayList<String>();
 		WikiCrawler c = new WikiCrawler("/wiki/Complexity_theory", 100, topics, "complexity.txt");
 		c.crawl();
-	}
-	
-	@Test
-	public void influence() throws IOException, InterruptedException {		
-		System.out.println(Util.influence(dummyGraph(), "A"));
 	}
 
 	@Test
