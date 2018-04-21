@@ -98,6 +98,43 @@ public class Util {
 		}
 		return null;
 	}
+	
+	public static Graph generateGraph(String file) {
+		Graph graph = new Graph();
+		Scanner scan = new Scanner(file);
+		int numVertices = Integer.parseInt(scan.nextLine());
+		while(scan.hasNextLine()) {
+			String line = scan.nextLine();
+			String[] vertices = line.split(" ");
+			if(graph.adjacencies.containsKey(vertices[0])) { //if has vertex in graph
+				Adjacency adj = graph.adjacencies.get(vertices[0]); //gets vertex from graph
+				if(graph.adjacencies.containsKey(vertices[1])) { //if has child in graph
+					adj.children.add(vertices[1]); //puts child into vertex's children
+					Adjacency child = graph.adjacencies.get(vertices[1]); //gets child from graph
+					child.parents.add(vertices[0]); //puts vertex into child's parents
+				} else { //if hasn't child in graph
+					adj.children.add(vertices[1]); //adds child to vertex's children
+					Adjacency child = new Adjacency(vertices[1]); //creates new adjacency for child
+					child.parents.add(vertices[0]); //puts vertex into childs's parents
+					graph.adjacencies.put(child.url, child); //puts child adjacency into graph
+				}
+			} else { //if hasn't vertex in graph
+				Adjacency adj = new Adjacency(vertices[0]); //creates new adjacency for vertex
+				if(graph.adjacencies.containsKey(vertices[1])) { //if has child in graph
+					adj.children.add(vertices[1]); //adds child to new vertex's children
+					Adjacency child = graph.adjacencies.get(vertices[1]); //gets child from graph
+					child.parents.add(vertices[0]); //adds vertex to child's parents
+				} else { //if hasn't child in graph
+					adj.children.add(vertices[1]); //
+					Adjacency child = new Adjacency(vertices[1]); //creates new adjacency for child
+					child.parents.add(vertices[0]); //adds vertex to child's parents
+					graph.adjacencies.put(child.url, child); //puts child adjacency into graph
+				}
+				graph.adjacencies.put(adj.url, adj); //puts vertex in graph
+			}
+		}
+		return graph;
+	}
 
 	/**
 	 * Git subdoc
