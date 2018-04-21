@@ -187,7 +187,7 @@ public class CrawlerTest {
 		c.crawl();
 		NetworkInfluence ni = new NetworkInfluence("WikiCS.txt");
 		ArrayList<String> al = ni.mostInfluentialDegree(10);
-		System.out.println("Top 10 Most Inf. Deg.: ");
+		System.out.println("Top 10 Most Inf. Sub. Mod.: ");
 		System.out.println(al);
 		System.out.println();
 	}
@@ -199,8 +199,8 @@ public class CrawlerTest {
 		c.crawl();
 		NetworkInfluence ni = new NetworkInfluence("WikiCS.txt");
 		ArrayList<String> al = ni.mostInfluentialModular(10);
-		System.out.println("Top 10 Most Inf. Mod.: ");
-		System.out.println(al);
+		System.out.println("Top 10 Most Inf. Sub. Mod.: ");
+		al.stream().forEach(x -> System.out.println(x + " " + ni.graph.adjacencies.get(x).length));
 		System.out.println();
 	}
 	

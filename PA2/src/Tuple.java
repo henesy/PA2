@@ -33,9 +33,9 @@ public class Tuple implements Comparable<Tuple> {
 	@Override
 	public int compareTo(Tuple arg0) {
 		if(d < ((Tuple)arg0).d)
-			return -1;
+			return 1;
 		if(d == ((Tuple)arg0).d)
 			return 0;
-		return 1;
+		return -1;
 	}
 }

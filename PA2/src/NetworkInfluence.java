@@ -236,6 +236,6 @@ public class NetworkInfluence {
 					.mapToDouble(x -> x.doubleValue())
 					.max().getAsDouble())
 			.mapToDouble(x -> x.doubleValue())
-			.sum();
+			.max().getAsDouble();
 	}
 }
