@@ -110,27 +110,27 @@ public class Util {
 				Adjacency adj = graph.adjacencies.get(vertices[0]); //gets vertex from graph
 				if(graph.adjacencies.containsKey(vertices[1])) { //if has child in graph
 					adj.children.add(vertices[1]); //puts child into vertex's children
-					Adjacency child = graph.adjacencies.get(vertices[1]); //
-					child.parents.add(vertices[0]);
-				} else {
-					adj.children.add(vertices[1]);
-					Adjacency child = new Adjacency(vertices[1]);
-					child.parents.add(vertices[0]);
-					graph.adjacencies.put(child.url, child);
+					Adjacency child = graph.adjacencies.get(vertices[1]); //gets child from graph
+					child.parents.add(vertices[0]); //puts vertex into child's parents
+				} else { //if hasn't child in graph
+					adj.children.add(vertices[1]); //adds child to vertex's children
+					Adjacency child = new Adjacency(vertices[1]); //creates new adjacency for child
+					child.parents.add(vertices[0]); //puts vertex into childs's parents
+					graph.adjacencies.put(child.url, child); //puts child adjacency into graph
 				}
-			} else {
-				Adjacency adj = new Adjacency(vertices[0]);
-				if(graph.adjacencies.containsKey(vertices[1])) {
-					adj.children.add(vertices[1]);
-					Adjacency child = graph.adjacencies.get(vertices[1]);
-					child.parents.add(vertices[0]);
-				} else {
-					adj.children.add(vertices[1]);
-					Adjacency child = new Adjacency(vertices[1]);
-					child.parents.add(vertices[0]);
-					graph.adjacencies.put(child.url, child);
+			} else { //if hasn't vertex in graph
+				Adjacency adj = new Adjacency(vertices[0]); //creates new adjacency for vertex
+				if(graph.adjacencies.containsKey(vertices[1])) { //if has child in graph
+					adj.children.add(vertices[1]); //adds child to new vertex's children
+					Adjacency child = graph.adjacencies.get(vertices[1]); //gets child from graph
+					child.parents.add(vertices[0]); //adds vertex to child's parents
+				} else { //if hasn't child in graph
+					adj.children.add(vertices[1]); //
+					Adjacency child = new Adjacency(vertices[1]); //creates new adjacency for child
+					child.parents.add(vertices[0]); //adds vertex to child's parents
+					graph.adjacencies.put(child.url, child); //puts child adjacency into graph
 				}
-				graph.adjacencies.put(adj.url, adj);
+				graph.adjacencies.put(adj.url, adj); //puts vertex in graph
 			}
 		}
 		return graph;

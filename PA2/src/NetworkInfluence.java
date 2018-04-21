@@ -18,8 +18,8 @@ import java.util.Set;
 
 public class NetworkInfluence {
 
-	private Graph graph;
-
+	public Graph graph;
+	
 	public NetworkInfluence(String graphData) {
 		String file = "";
 		String line;
@@ -36,7 +36,7 @@ public class NetworkInfluence {
 			e.printStackTrace();
 		}
 		
-		
+		this.graph = Util.generateGraph(file);
 		
 	}
 
