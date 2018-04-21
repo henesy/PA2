@@ -160,6 +160,42 @@ public class CrawlerTest {
 		String doc = Util.extractSubdoc(Util.curl(WikiCrawler.BASE_URL, "/wiki/Big_12_Conference"));
 		System.out.println(Pattern.compile("Cyclones").matcher(doc).find());
 	}
+	
+	@Test
+	public void top10MID() throws IOException, InterruptedException {
+		ArrayList<String> topics = new ArrayList<String>();
+		WikiCrawler c = new WikiCrawler("/wiki/Computer_Science", 100, topics, "WikiCS.txt");
+		c.crawl();
+		NetworkInfluence ni = new NetworkInfluence("WikiCS.txt");
+		ArrayList<String> al = ni.mostInfluentialDegree(10);
+		System.out.println("Top 10 Most Inf. Deg.: ");
+		System.out.println(al);
+		System.out.println();
+	}
+	
+	@Test
+	public void top10MIM() throws IOException, InterruptedException {
+		ArrayList<String> topics = new ArrayList<String>();
+		WikiCrawler c = new WikiCrawler("/wiki/Computer_Science", 100, topics, "WikiCS.txt");
+		c.crawl();
+		NetworkInfluence ni = new NetworkInfluence("WikiCS.txt");
+		ArrayList<String> al = ni.mostInfluentialModular(10);
+		System.out.println("Top 10 Most Inf. Mod.: ");
+		System.out.println(al);
+		System.out.println();
+	}
+	
+	@Test
+	public void top10MISM() throws IOException, InterruptedException {
+		ArrayList<String> topics = new ArrayList<String>();
+		WikiCrawler c = new WikiCrawler("/wiki/Computer_Science", 100, topics, "WikiCS.txt");
+		c.crawl();
+		NetworkInfluence ni = new NetworkInfluence("WikiCS.txt");
+		ArrayList<String> al = ni.mostInfluentialSubModular(10);
+		System.out.println("Top 10 Most Inf. Sub. Mod.: ");
+		System.out.println(al);
+		System.out.println();
+	}
 
 	@Test
 	public void numEdges() throws IOException, InterruptedException {
