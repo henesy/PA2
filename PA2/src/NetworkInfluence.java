@@ -3,12 +3,17 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * @author Tyler Fenton
@@ -19,7 +24,7 @@ import java.util.Set;
 public class NetworkInfluence {
 
 	public Graph graph;
-	
+
 	public NetworkInfluence(String graphData) {
 		String file = "";
 		String line;
@@ -112,12 +117,16 @@ public class NetworkInfluence {
 	 * @return influence of u
 	 */
 	public float influence(String u) {
-		return (float)Util.groupBy(graph.adjacencies.values(), new DistanceFrom(graph, u))
-			.entrySet().parallelStream()
-			.map(me -> me.getKey())
-			.map(x -> 1 / Math.pow(2, x))
-			.mapToDouble(x -> x.doubleValue())
-			.sum();
+		Function<String, Integer> f = s -> graph.adjacencies.get(s).length;
+		Collection<String> urls = graph.adjacencies.values().stream()
+				.map(a -> a.url)
+				.collect(Collectors.toCollection(LinkedList::new));
+		return (float)Util.groupBy(urls, f)
+				.entrySet().parallelStream()
+				.map(me -> me.getKey())
+				.map(x -> 1 / Math.pow(2, x))
+				.mapToDouble(x -> x.doubleValue())
+				.sum();
 	}
 
 	/**
@@ -166,8 +175,22 @@ public class NetworkInfluence {
 	 * @return resulting set of nodes
 	 */
 	public ArrayList<String> mostInfluentialModular(int k) {
-		return null;
-		// TODO
+		int i;
+		ArrayList<String> al = new ArrayList<String>();
+		
+		// Tuples go into the PQ when we have their total outdegree
+		PriorityQueue<Tuple> pq = new PriorityQueue<>();
+
+		for(String s : graph.visited) {
+			float od = influence(s);
+			Tuple t = new Tuple(s, od);
+			pq.add(t);
+		}
+		
+		for(i = 0; i < k && !pq.isEmpty(); i++)
+			al.add(pq.remove().s);
+		
+		return al;
 	}
 
 	/**

@@ -12,7 +12,7 @@ public class Tuple implements Comparable<Tuple> {
 	// The Node in the graph
 	public String s;
 	// The degree of this Node
-	public int d;
+	public float d;
 	
 	// Default constructor
 	public Tuple() {
@@ -23,6 +23,11 @@ public class Tuple implements Comparable<Tuple> {
 	public Tuple(String s0, int d0) {
 		s = s0;
 		d = d0;
+	}
+
+	public Tuple(String s2, float od) {
+		s = s2;
+		d = od;
 	}
 
 	@Override

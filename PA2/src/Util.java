@@ -207,18 +207,10 @@ public class Util {
 		for (V v : coll) {
 			E key = f.apply(v);
 			Set<V> vs = m.containsKey(key) ? m.get(key) : new HashSet<V>();
+			m.put(key, vs);
 			vs.add(v);
 		}
 		return m;
-	}
-	
-	public static float influence(Graph g, String u) {
-		return (float)groupBy(g.adjacencies.values(), new DistanceFrom(g, u))
-			.entrySet().parallelStream()
-			.map(me -> me.getKey())
-			.map(x -> 1 / Math.pow(2, x))
-			.mapToDouble(x -> x.doubleValue())
-			.sum();
 	}
 
 	public static void writeFile(String fileName, String string) throws IOException {
@@ -229,7 +221,7 @@ public class Util {
 	
 	// Recursively counts the number of children from a given 's' ;; this calculates the outdegree of s
 	public static int countChildren(Graph g, String s) {
-		// Outdegree is 0 if it connects to no othre nodes
+		// Outdegree is 0 if it connects to no other nodes
 		int count = 0;
 		count += g.adjacencies.get(s).children.size();
 		for(String childString : g.adjacencies.get(s).children)
